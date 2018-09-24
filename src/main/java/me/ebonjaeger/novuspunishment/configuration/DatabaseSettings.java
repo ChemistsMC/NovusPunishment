@@ -19,4 +19,10 @@ public class DatabaseSettings implements SettingsHolder {
 
 	@Comment("MySQL password")
 	public static final Property<String> DATABASE_PASSWORD = newProperty("database.password", "adminadmin");
+
+	@Comment("The name of the MySQL database being used")
+	public static final Property<String> DATABASE_NAME = newProperty("database.name", "minecraft");
+
+	@Comment("Prefix to use for all table names, to prevent table conflict")
+	public static final Property<String> TABLE_PREFIX = newProperty("database.table-prefix", "np_");
 }

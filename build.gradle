@@ -31,6 +31,12 @@ dependencies {
 
     implementation "ch.jalu:configme:1.0"
     implementation "ch.jalu:injector:1.0"
+
+    implementation(group: 'com.zaxxer', name: 'HikariCP', version: '2.7.2') {
+        exclude group: 'org.slf4j'
+    }
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 }
 
 shadowJar.relocate('ch.jalu', 'me.ebonjaeger.ch.jalu')
+shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.datasource')

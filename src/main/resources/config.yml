@@ -7,3 +7,8 @@ database:
   username: 'admin'
   # MySQL password
   password: 'adminadmin'
+  # The name of the MySQL database being used
+  name: 'minecraft'
+  # Prefix to use for all table names, to prevent table conflict
+  table-prefix: 'np_'
+
