@@ -71,32 +71,14 @@ class MySqlStatements {
 	 * Get punishments statements.
 	 */
 
-	static String getWarningsStmt(String prefix, int pageSize, int offset) {
-		return "SELECT " + Columns.STAFF_UUID + ", " + Columns.TIMESTAMP + ", " + Columns.REASON + " " +
-				"FROM " + prefix + "player_warnings WHERE " +  Columns.UUID + "=? " +
+	static String getReportStmt(String prefix, int pageSize, int offset) {
+		return "SELECT " + Columns.STAFF_UUID + ", " + Columns.TIMESTAMP + ", " + Columns.EXPIRES + ", " + Columns.REASON + " " +
+				"FROM " + prefix + "player_warnings " +
+				"LEFT JOIN " + prefix + "player_kicks USING (" + Columns.UUID + ") " +
+				"LEFT JOIN " + prefix + "player_tempbans USING (" + Columns.UUID + ") " +
+				"LEFT JOIN " + prefix + "player_bans USING (" + Columns.UUID + ") " +
+				"WHERE " +  Columns.UUID + "=? " +
 				"ORDER BY " + Columns.ID + "," + Columns.TIMESTAMP + " DESC " +
 				"LIMIT " + pageSize + " OFFSET " + offset + ";";
-	}
-
-	static String getTotalKicksStmt(String prefix) {
-		return "SELECT COUNT(*) AS _count FROM " + prefix + "player_kicks " +
-				"WHERE " + Columns.UUID + "=?;";
-	}
-
-	static String getKicksStmt(String prefix, int pageSize, int offset) {
-		return "SELECT " + Columns.STAFF_UUID + ", " + Columns.TIMESTAMP + ", " + Columns.REASON + " " +
-				"FROM " + prefix + "player_kicks WHERE " +  Columns.UUID + "=? " +
-				"ORDER BY " + Columns.ID + "," + Columns.TIMESTAMP + " DESC " +
-				"LIMIT " + pageSize + " OFFSET " + offset + ";";
-	}
-
-	static String getTotalWarningsStmt(String prefix) {
-		return "SELECT COUNT(*) AS _count FROM " + prefix + "player_kicks " +
-				"WHERE " + Columns.UUID + "=?;";
-	}
-
-	static String getActiveTempbansStmt(String prefix) {
-		return "SELECT * FROM " + prefix + "player_tempbans " +
-				"WHERE " + Columns.EXPIRES + " >= ?;";
 	}
 }
