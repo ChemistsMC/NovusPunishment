@@ -1,0 +1,5 @@
+name: NovusPunishment
+version: 0.0.1
+main: me.ebonjaeger.novuspunishment.NovusPunishment
+authors: [EbonJaeger]
+api-version: 1.13.1

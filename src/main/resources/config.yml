@@ -1,0 +1,9 @@
+database:
+  # Hostname for the MySQL server
+  hostname: 'localhost'
+  # Port for the MySQL server
+  port: '3306'
+  # MySQL username
+  username: 'admin'
+  # MySQL password
+  password: 'adminadmin'
