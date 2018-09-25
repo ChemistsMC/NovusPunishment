@@ -20,23 +20,32 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile(group: 'junit', name: 'junit', version: '4.12') {
+        exclude group: 'org.hamcrest'
+    }
     testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
-    testCompile group: 'org.spigotmc', name: 'spigot-api', version: bukkitVersion
+    testCompile(group: 'org.spigotmc', name: 'spigot-api', version: bukkitVersion) {
+        exclude group: 'junit'
+        exclude group: 'org.yaml'
+    }
 
     compileOnly ("org.spigotmc:spigot-api:" + bukkitVersion) {
         exclude group: 'junit'
         exclude group: 'org.yaml'
     }
 
-    implementation "ch.jalu:configme:1.0"
-    implementation "ch.jalu:injector:1.0"
+    compile("ch.jalu:configme:1.0") {
+        exclude group: 'org.yaml'
+    }
+    compile "ch.jalu:injector:1.0"
 
-    implementation(group: 'com.zaxxer', name: 'HikariCP', version: '2.7.2') {
+    compile(group: 'com.zaxxer', name: 'HikariCP', version: '2.7.2') {
         exclude group: 'org.slf4j'
     }
-    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 }
 
-shadowJar.relocate('ch.jalu', 'me.ebonjaeger.ch.jalu')
-shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.datasource')
+shadowJar.relocate('ch.jalu', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('javax', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('org.slf4j', 'me.ebonjaeger.novuspunishment.libs')
