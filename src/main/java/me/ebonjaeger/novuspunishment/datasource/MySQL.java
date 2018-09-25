@@ -4,15 +4,16 @@ import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.HikariPool;
 import me.ebonjaeger.novuspunishment.ConsoleLogger;
 import me.ebonjaeger.novuspunishment.NovusPunishment;
-import me.ebonjaeger.novuspunishment.action.Kick;
-import me.ebonjaeger.novuspunishment.action.PermanentBan;
-import me.ebonjaeger.novuspunishment.action.TemporaryBan;
-import me.ebonjaeger.novuspunishment.action.Warning;
+import me.ebonjaeger.novuspunishment.action.*;
 import me.ebonjaeger.novuspunishment.configuration.DatabaseSettings;
 import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 
 import javax.inject.Inject;
 import java.sql.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * MySQL data source class.
@@ -96,10 +97,7 @@ public class MySQL {
 	private void createTables(Connection connection) throws SQLException {
 		Statement statement = connection.createStatement();
 
-		statement.addBatch(MySqlStatements.createWarningsTable(prefix));
-		statement.addBatch(MySqlStatements.createKicksTable(prefix));
-		statement.addBatch(MySqlStatements.createTempbansTable(prefix));
-		statement.addBatch(MySqlStatements.createBansTable(prefix));
+		statement.addBatch(MySqlStatements.createActionsTable(prefix));
 
 		statement.executeBatch();
 		statement.close();
@@ -144,6 +142,26 @@ public class MySQL {
 			statement.executeUpdate();
 		} catch (SQLException ex) {
 			ConsoleLogger.severe("Unable to save warning in database:", ex);
+		}
+	}
+
+	/**
+	 * Save a mute action to the database.
+	 *
+	 * @param mute The {@link Mute} being stored
+	 */
+	public void saveMute(Mute mute) {
+		try (Connection conn = getConnection();
+			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveTempbanStmt(prefix))) {
+			statement.setString(1, mute.getPlayerUUID().toString());
+			statement.setString(2, mute.getStaffUUID().toString());
+			statement.setTimestamp(3, Timestamp.from(mute.getTimestamp()));
+			statement.setTimestamp(4, Timestamp.from(mute.getExpires()));
+			statement.setString(5, mute.getReason());
+
+			statement.executeUpdate();
+		} catch (SQLException ex) {
+			ConsoleLogger.severe("Unable to save tempban in database:", ex);
 		}
 	}
 
@@ -209,5 +227,71 @@ public class MySQL {
 	 * Methods for getting data from the database.
 	 */
 
+	/**
+	 * Get a page view of a player's past incidents.
+	 *
+	 * What is returned will be limited to only the results in the requested page.
+	 *
+	 * @param playerUUID The {@link UUID} of the player to get the report for
+	 * @param page The page number to get
+	 * @param pageSize The number of entries in a page
+	 * @return A List of {@link Action}'s
+	 * @throws IllegalArgumentException If there is an unknown action type stored in the database.
+	 */
+	public List<Action> getActionsAgainstUser(UUID playerUUID, int page, int pageSize) {
+		List<Action> actions = new ArrayList<>();
+		int offset = (page - 1) * pageSize;
 
+		try (Connection conn = getConnection();
+			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.getActionsStmt(prefix, pageSize, offset))) {
+			statement.setString(1, playerUUID.toString());
+
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				// Put all of the row's data into objects
+				UUID staffUUID = UUID.fromString(resultSet.getString(Columns.STAFF_UUID));
+				Instant timestamp = resultSet.getTimestamp(Columns.TIMESTAMP).toInstant();
+				String reason = resultSet.getString(Columns.REASON);
+
+				// Some actions (mutes) may not have reasons
+				if (reason == null) {
+					reason = "";
+				}
+
+				// Only temporary actions have an 'expires' column entry that isn't null
+				Timestamp rawExpires = resultSet.getTimestamp(Columns.EXPIRES);
+				Instant expires = null;
+				if (rawExpires != null) {
+					expires = rawExpires.toInstant();
+				}
+
+				String type = resultSet.getString(Columns.TYPE);
+				switch (type) {
+					case "warning":
+						actions.add(new Warning(playerUUID, staffUUID, timestamp, reason));
+						break;
+					case "mute":
+						actions.add(new Mute(playerUUID, staffUUID, timestamp, expires, reason));
+						break;
+					case "kick":
+						actions.add(new Kick(playerUUID, staffUUID, timestamp, reason));
+						break;
+					case "tempban":
+						actions.add(new TemporaryBan(playerUUID, staffUUID, timestamp, expires, reason));
+						break;
+					case "permban":
+						actions.add(new PermanentBan(playerUUID, staffUUID, timestamp, reason));
+						break;
+					default:
+						throw new IllegalArgumentException(String.format("Unknown action type in database: %s", type));
+				}
+			}
+
+			resultSet.close();
+		} catch (SQLException ex) {
+			ConsoleLogger.severe(String.format("Unable to get past actions for player with unique ID '%s'", playerUUID.toString()), ex);
+		}
+
+		return actions;
+	}
 }

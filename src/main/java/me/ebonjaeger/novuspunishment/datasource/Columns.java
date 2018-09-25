@@ -8,4 +8,5 @@ final class Columns {
 	static final String TIMESTAMP = "timestamp";
 	static final String REASON = "reason";
 	static final String EXPIRES = "expires";
+	static final String TYPE = "action_type";
 }
