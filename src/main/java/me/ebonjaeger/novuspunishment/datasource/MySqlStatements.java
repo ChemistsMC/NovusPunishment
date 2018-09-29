@@ -18,6 +18,16 @@ class MySqlStatements {
 				"PRIMARY KEY (" + Columns.ID + "));";
 	}
 
+	static String createStateTable(String prefix) {
+		return "CREATE TABLE IF NOT EXISTS " + prefix + "player_state (" +
+				Columns.ID + " INT UNSIGNED NOT NULL AUTO_INCREMENT," +
+				Columns.UUID + " CHAR(36) NOT NULL UNIQUE," +
+				Columns.PLAYERNAME + " VARCHAR(16) NOT NULL," +
+				Columns.MUTED + " BOOLEAN NOT NULL," +
+				Columns.BANNED + " BOOLEAN NOT NULL," +
+				"PRIMARY KEY (" + Columns.ID + "));";
+	}
+
 	/*
 	 * Save punishments statements.
 	 */
@@ -42,6 +52,11 @@ class MySqlStatements {
 		return "INSERT INTO " + prefix + "player_actions VALUES(null,?,?,?,NULL,?,'permban');";
 	}
 
+	static String savePlayerStmt(String prefix) {
+		return "INSERT INTO " + prefix + "player_state VALUES(null,?,?,?,?) " +
+				"ON DUPLICATE KEY UPDATE " + Columns.PLAYERNAME + "=?, " + Columns.MUTED + "=?, " + Columns.BANNED + "=?;";
+	}
+
 	/*
 	 * Get punishments statements.
 	 */
@@ -53,5 +68,19 @@ class MySqlStatements {
 				"WHERE " +  Columns.UUID + "=? " +
 				"ORDER BY " + Columns.ID + "," + Columns.TIMESTAMP + " DESC " +
 				"LIMIT " + pageSize + " OFFSET " + offset + ";";
+	}
+
+	static String getPlayerStmt(String prefix) {
+		return "SELECT " + Columns.PLAYERNAME + ", " + Columns.MUTED + ", " + Columns.BANNED + " " +
+				"FROM " + prefix + "player_state " +
+				"WHERE " + Columns.UUID + " =?;";
+	}
+
+	static String getLatestTempbanStmt(String prefix) {
+		return "SELECT " + Columns.STAFF_UUID + ", " + Columns.TIMESTAMP + ", " + Columns.REASON + ", " + Columns.EXPIRES + " " +
+				"FROM " + prefix + "player_actions " +
+				"WHERE " + Columns.UUID + "=? AND " + Columns.TYPE + "='tempban' AND " + Columns.EXPIRES + ">=? " +
+				"ORDER BY " + Columns.ID + " DESC " +
+				"LIMIT 1;";
 	}
 }

@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.HikariPool;
 import me.ebonjaeger.novuspunishment.ConsoleLogger;
 import me.ebonjaeger.novuspunishment.NovusPunishment;
+import me.ebonjaeger.novuspunishment.PlayerState;
 import me.ebonjaeger.novuspunishment.action.*;
 import me.ebonjaeger.novuspunishment.configuration.DatabaseSettings;
 import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
@@ -98,6 +99,7 @@ public class MySQL {
 		Statement statement = connection.createStatement();
 
 		statement.addBatch(MySqlStatements.createActionsTable(prefix));
+		statement.addBatch(MySqlStatements.createStateTable(prefix));
 
 		statement.executeBatch();
 		statement.close();
@@ -223,6 +225,32 @@ public class MySQL {
 		}
 	}
 
+	/**
+	 * Save a player's current state into the database.
+	 * If there is already old state in the database, the existing entries will be updated instead.
+	 *
+	 * @param playerState The {@link PlayerState} to save
+	 */
+	public void savePlayerState(PlayerState playerState) {
+		try (Connection conn = getConnection();
+			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.savePlayerStmt(prefix))) {
+			// INSERT values
+			statement.setString(1, playerState.getUniqueID().toString());
+			statement.setString(2, playerState.getUserName());
+			statement.setBoolean(3, playerState.isMuted());
+			statement.setBoolean(4, playerState.isBanned());
+
+			// UPDATE values
+			statement.setString(5, playerState.getUserName());
+			statement.setBoolean(6, playerState.isMuted());
+			statement.setBoolean(7, playerState.isBanned());
+
+			statement.executeUpdate();
+		} catch (SQLException ex) {
+			ConsoleLogger.severe(String.format("Unable to save player state in database for player '%s':", playerState.getUserName()), ex);
+		}
+	}
+
 	/*
 	 * Methods for getting data from the database.
 	 */
@@ -293,5 +321,64 @@ public class MySQL {
 		}
 
 		return actions;
+	}
+
+	/**
+	 * Load a player's currently saved state from the database. If no state
+	 * has been saved (e.g. the player is joining the server for the first time),
+	 * this method returns {@code null}.
+	 *
+	 * @param uniqueID The {@link UUID} of the player
+	 * @return The saved {@link PlayerState} if exists, or null
+	 */
+	public PlayerState getPlayerState(UUID uniqueID) {
+		try (Connection conn = getConnection();
+			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.getPlayerStmt(prefix))) {
+			statement.setString(1, uniqueID.toString());
+
+			ResultSet result = statement.executeQuery();
+			if (result != null && result.next()) {
+				String userName = result.getString(Columns.PLAYERNAME);
+				boolean isMuted = result.getBoolean(Columns.MUTED);
+				boolean isBanned = result.getBoolean(Columns.BANNED);
+
+				result.close();
+
+				return new PlayerState(uniqueID, userName, isMuted, isBanned);
+			}
+		} catch (SQLException ex) {
+			ConsoleLogger.severe(String.format("Unable to get the current state for player with unique ID '%s'", uniqueID.toString()));
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get an active {@link TemporaryBan} for a player, if one exists.
+	 * Returns {@code null} if the player has no active tempban.
+	 *
+	 * @param uniqueID The player's unique ID
+	 * @return The player's active tempban, or null
+	 */
+	public TemporaryBan getActiveTempban(UUID uniqueID) {
+		try (Connection conn = getConnection();
+			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.getLatestTempbanStmt(prefix))) {
+			statement.setString(1, uniqueID.toString());
+			statement.setTimestamp(2, Timestamp.from(Instant.now()));
+
+			ResultSet result = statement.executeQuery();
+			if (result != null && result.next()) {
+				UUID staffUniqueID = UUID.fromString(result.getString(Columns.STAFF_UUID));
+				Instant timeStamp = result.getTimestamp(Columns.TIMESTAMP).toInstant();
+				Instant expires = result.getTimestamp(Columns.EXPIRES).toInstant();
+				String reason = result.getString(Columns.REASON);
+
+				return new TemporaryBan(uniqueID, staffUniqueID, timeStamp, expires, reason);
+			}
+		} catch (SQLException ex) {
+			ConsoleLogger.severe(String.format("Unable to get latest tempban for '%s':", uniqueID.toString()), ex);
+		}
+
+		return null;
 	}
 }

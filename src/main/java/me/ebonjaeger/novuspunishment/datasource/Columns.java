@@ -9,4 +9,8 @@ final class Columns {
 	static final String REASON = "reason";
 	static final String EXPIRES = "expires";
 	static final String TYPE = "action_type";
+
+	static final String PLAYERNAME = "player_name";
+	static final String MUTED = "is_muted";
+	static final String BANNED = "is_banned";
 }
