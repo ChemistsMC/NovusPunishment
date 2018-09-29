@@ -30,9 +30,7 @@ public class PlayerLogoutListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerState state = plugin.getPlayerState(player.getUniqueId());
 		if (state != null) {
-			if (plugin.isShuttingDown()) {
-				dataSource.savePlayerState(state);
-			} else {
+			if (!plugin.isShuttingDown()) {
 				bukkitService.runTaskAsync(() -> dataSource.savePlayerState(state));
 			}
 		}
@@ -43,9 +41,7 @@ public class PlayerLogoutListener implements Listener {
 		Player player = event.getPlayer();
 		PlayerState state = plugin.getPlayerState(player.getUniqueId());
 		if (state != null) {
-			if (plugin.isShuttingDown()) {
-				dataSource.savePlayerState(state);
-			} else {
+			if (!plugin.isShuttingDown()) {
 				bukkitService.runTaskAsync(() -> dataSource.savePlayerState(state));
 			}
 		}

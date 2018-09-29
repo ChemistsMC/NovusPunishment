@@ -51,9 +51,11 @@ public class NovusPunishment extends JavaPlugin {
 		getServer().getScheduler().cancelTasks(this);
 		this.isShuttingDown = true;
 
+		// Save all player states in memory to the disk
 		for (PlayerState state : playerStates.values()) {
 			dataSource.savePlayerState(state);
 		}
+		playerStates.clear();
 
 		dataSource.close();
 	}
