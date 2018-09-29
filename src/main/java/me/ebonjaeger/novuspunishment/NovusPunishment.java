@@ -40,10 +40,10 @@ public class NovusPunishment extends JavaPlugin {
 		SettingsManager settingsManager = SettingsManager.create(new File(getDataFolder(), "config.yml"));
 		injector.register(SettingsManager.class, settingsManager);
 
+		this.dataSource = injector.getSingleton(MySQL.class);
+
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLoginListener.class), this);
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLogoutListener.class), this);
-
-		this.dataSource = injector.getSingleton(MySQL.class);
 	}
 
 	@Override
