@@ -26,7 +26,6 @@ dependencies {
     testCompile group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0'
     testCompile(group: 'org.spigotmc', name: 'spigot-api', version: bukkitVersion) {
         exclude group: 'junit'
-        exclude group: 'org.yaml'
     }
 
     compileOnly ("org.spigotmc:spigot-api:" + bukkitVersion) {
@@ -35,7 +34,6 @@ dependencies {
     }
 
     compile("ch.jalu:configme:1.0") {
-        exclude group: 'org.yaml'
     }
     compile "ch.jalu:injector:1.0"
 
@@ -45,6 +43,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 }
 
+shadowJar.dependsOn test
 shadowJar.relocate('ch.jalu', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('javax', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
