@@ -3,3 +3,65 @@ version: 0.0.1
 main: me.ebonjaeger.novuspunishment.NovusPunishment
 authors: [EbonJaeger]
 api-version: 1.13.1
+
+commands:
+  mute:
+    aliases: [unmute, togglemute]
+    description: Toggle a player's ability to send chat messages
+  warn:
+    description: Give a player a warning
+  kick:
+    description: Kick a player from the server
+  tempban:
+    aliases: [tb]
+    description: Temporaily ban a player from the server
+  ban:
+    description: Permanitely ban a player from the server
+  unban:
+    description: Allow a player to be able to join the server again
+  getreport:
+    description: See past actions taken against a player
+
+permissions:
+  newpunish.staff:
+    default: op
+    children:
+      newpunish.command.mute: true
+      newpunish.command.warn: true
+      newpunish.command.kick: true
+      newpunish.command.tempban: true
+      newpunish.command.ban: true
+      newpunish.command.unban: true
+      newpunish.command.getreport: true
+  newpunish.bypass.all:
+    default: op
+    children:
+      newpunish.bypass.mute: true
+      newpunish.bypass.warn: true
+      newpunish.bypass.kick: true
+      newpunish.bypass.tempban: true
+      newpunish.bypass.ban: true
+  newpunish.bypass.mute:
+    default: false
+  newpunish.bypass.warn:
+    default: false
+  newpunish.bypass.kick:
+    default: false
+  newpunish.bypass.tempban:
+    default: false
+  newpunish.bypass.ban:
+    default: false
+  newpunish.command.mute:
+    default: false
+  newpunish.command.warn:
+    default: false
+  newpunish.command.kick:
+    default: false
+  newpunish.command.tempban:
+    default: false
+  newpunish.command.ban:
+    default: false
+  newpunish.command.unban:
+    default: false
+  newpunish.command.getreport:
+    default: false
