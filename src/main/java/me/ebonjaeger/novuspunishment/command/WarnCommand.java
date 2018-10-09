@@ -41,7 +41,7 @@ public class WarnCommand extends BaseCommand {
 		Player target = player.getPlayer();
 		String fullReason = String.join(", ", reason);
 
-		if (sender instanceof Player && target.equals((Player) sender)) {
+		if (sender instanceof Player && target.equals(sender)) {
 			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
 			return;
 		}
