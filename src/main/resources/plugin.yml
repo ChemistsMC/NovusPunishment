@@ -2,6 +2,7 @@ name: NovusPunishment
 version: 0.0.1
 main: me.ebonjaeger.novuspunishment.NovusPunishment
 authors: [EbonJaeger]
+softdepend: [Essentials]
 api-version: 1.13.1
 
 commands:
@@ -33,7 +34,7 @@ permissions:
       newpunish.command.ban: true
       newpunish.command.unban: true
       newpunish.command.getreport: true
-  newpunish.bypass.all:
+  newpunish.bypass.*:
     default: op
     children:
       newpunish.bypass.mute: true
@@ -41,6 +42,14 @@ permissions:
       newpunish.bypass.kick: true
       newpunish.bypass.tempban: true
       newpunish.bypass.ban: true
+  newpunish.notify.*:
+    default: op
+    children:
+      newpunish.notify.mute: true
+      newpunish.notify.warn: true
+      newpunish.notify.kick: true
+      newpunish.notify.tempban: true
+      newpunish.notify.ban: true
   newpunish.bypass.mute:
     default: false
   newpunish.bypass.warn:
@@ -64,4 +73,14 @@ permissions:
   newpunish.command.unban:
     default: false
   newpunish.command.getreport:
+    default: false
+  newpunish.notify.mute:
+    default: false
+  newpunish.notify.warn:
+    default: false
+  newpunish.notify.kick:
+    default: false
+  newpunish.notify.tempban:
+    default: false
+  newpunish.notify.ban:
     default: false

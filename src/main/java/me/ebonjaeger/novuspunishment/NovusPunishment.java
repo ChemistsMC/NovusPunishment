@@ -2,11 +2,15 @@ package me.ebonjaeger.novuspunishment;
 
 import ch.jalu.injector.Injector;
 import ch.jalu.injector.InjectorBuilder;
+import co.aikar.commands.PaperCommandManager;
+import me.ebonjaeger.novuspunishment.command.KickCommand;
 import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
 import me.ebonjaeger.novuspunishment.listener.PlayerLoginListener;
 import me.ebonjaeger.novuspunishment.listener.PlayerLogoutListener;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,11 +65,35 @@ public class NovusPunishment extends JavaPlugin {
 	}
 
 	private void registerCommands(Injector injector) {
-		// TODO: Register commands
+		PaperCommandManager commandManager = new PaperCommandManager(this);
+
+		commandManager.registerCommand(injector.getSingleton(KickCommand.class));
 	}
 
 	public boolean isShuttingDown() {
 		return isShuttingDown;
+	}
+
+	public void sendMessage(Player player, Message message, String... replacers) {
+		String finalMessage = message.getMessage();
+		if (replacers.length > 0) {
+			for (int i = 0; i < replacers.length; i++) {
+				finalMessage = finalMessage.replace("{" + i + "}", replacers[i]);
+			}
+		}
+
+		player.sendMessage(finalMessage);
+	}
+
+	public void sendMessage(CommandSender sender, Message message, String... replacers) {
+		String finalMessage = message.getMessage();
+		if (replacers.length > 0) {
+			for (int i = 0; i < replacers.length; i++) {
+				finalMessage = finalMessage.replace("{" + i + "}", replacers[i]);
+			}
+		}
+
+		sender.sendMessage(finalMessage);
 	}
 
 	// TODO: Maybe create some sort of state manager class for the next three methods

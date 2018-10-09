@@ -7,7 +7,8 @@ plugins {
 group 'me.ebonjaeger'
 version '0.0.1'
 
-sourceCompatibility = 1.8
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 
 def bukkitVersion = "1.13.1-R0.1-SNAPSHOT"
 
@@ -16,6 +17,10 @@ repositories {
 
     maven {
         url "https://hub.spigotmc.org/nexus/content/groups/public/"
+    }
+
+    maven {
+        url = "https://repo.aikar.co/content/groups/aikar/"
     }
 }
 
@@ -33,18 +38,29 @@ dependencies {
         exclude group: 'org.yaml'
     }
 
-    compile("ch.jalu:configme:1.0") {
-    }
+    compile "ch.jalu:configme:1.0"
     compile "ch.jalu:injector:1.0"
 
     compile(group: 'com.zaxxer', name: 'HikariCP', version: '2.7.2') {
         exclude group: 'org.slf4j'
     }
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+
+    compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
 }
 
-shadowJar.dependsOn test
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
 shadowJar.relocate('ch.jalu', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('javax', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('org.slf4j', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('co.aikar', 'me.ebonjaeger.novuspunishment.libs')
+
+build.dependsOn clean
+build.dependsOn test
+build.dependsOn shadowJar

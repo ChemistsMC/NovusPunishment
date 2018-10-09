@@ -6,6 +6,11 @@ import java.time.Duration;
 
 public class Utils {
 
+	public static String formatKickMessage(String reason) {
+		return String.format(ChatColor.GRAY + "You have been kicked from the server!\n" +
+		ChatColor.GRAY + "Reason: " + ChatColor.RED + "%s", reason);
+	}
+
 	public static String formatTempbanMessage(String reason, Duration duration) {
 		return String.format(ChatColor.GRAY + "You have been temporarily banned!\n " +
 				ChatColor.GRAY + "For another: " + ChatColor.WHITE + "%s\n " +
