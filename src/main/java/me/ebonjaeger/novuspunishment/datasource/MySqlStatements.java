@@ -10,7 +10,7 @@ class MySqlStatements {
 		return "CREATE TABLE IF NOT EXISTS " + prefix + "player_actions (" +
 				Columns.ID + " INT UNSIGNED NOT NULL AUTO_INCREMENT," +
 				Columns.UUID + " CHAR(36) NOT NULL," +
-				Columns.STAFF_UUID + " CHAR(36)," +
+				Columns.STAFF_UUID + " VARCHAR(36) NOT NULL," +
 				Columns.TIMESTAMP + " TIMESTAMP NOT NULL," +
 				Columns.EXPIRES + " TIMESTAMP," +
 				Columns.REASON + " VARCHAR(255)," +

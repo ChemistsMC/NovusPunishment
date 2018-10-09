@@ -12,7 +12,7 @@ import java.util.UUID;
 public class PermanentBan implements Action {
 
 	private UUID playerUUID;
-	private UUID staffUUID;
+	private String staff;
 	private Instant timestamp;
 	private String reason;
 
@@ -20,13 +20,13 @@ public class PermanentBan implements Action {
 	 * Constructor.
 	 *
 	 * @param playerUUID The UUID of the player being banned
-	 * @param staffUUID The UUID of the staff banning the player
+	 * @param staff The UUID of the staff banning the player, or 'console'
 	 * @param timestamp The {@link Instant} when the ban occurred
 	 * @param reason The reason given for the ban
 	 */
-	public PermanentBan(UUID playerUUID, UUID staffUUID, Instant timestamp, String reason) {
+	public PermanentBan(UUID playerUUID, String staff, Instant timestamp, String reason) {
 		this.playerUUID = playerUUID;
-		this.staffUUID = staffUUID;
+		this.staff = staff;
 		this.timestamp = timestamp;
 		this.reason = reason;
 	}
@@ -37,8 +37,8 @@ public class PermanentBan implements Action {
 	}
 
 	@Override
-	public UUID getStaffUUID() {
-		return staffUUID;
+	public String getStaff() {
+		return staff;
 	}
 
 	@Override

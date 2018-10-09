@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Mute implements TemporaryAction {
 
 	private UUID playerUUID;
-	private UUID staffUUID;
+	private String staff;
 	private Instant timestamp;
 	private Instant expires;
 	private String reason;
@@ -21,14 +21,14 @@ public class Mute implements TemporaryAction {
 	 * Constructor.
 	 *
 	 * @param playerUUID The UUID of the player being muted
-	 * @param staffUUID The UUID of the staff muting the player
+	 * @param staff The UUID of the staff muting the player, or 'console'
 	 * @param timestamp The {@link Instant} when the mute occurred
 	 * @param expires The {@link Instant} that the mute will expire
 	 * @param reason The reason given for the mute. May be an empty String
 	 */
-	public Mute(UUID playerUUID, UUID staffUUID, Instant timestamp, Instant expires, String reason) {
+	public Mute(UUID playerUUID, String staff, Instant timestamp, Instant expires, String reason) {
 		this.playerUUID = playerUUID;
-		this.staffUUID = staffUUID;
+		this.staff = staff;
 		this.timestamp = timestamp;
 		this.expires = expires;
 		this.reason = reason;
@@ -45,8 +45,8 @@ public class Mute implements TemporaryAction {
 	}
 
 	@Override
-	public UUID getStaffUUID() {
-		return staffUUID;
+	public String getStaff() {
+		return staff;
 	}
 
 	@Override

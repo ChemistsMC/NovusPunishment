@@ -16,11 +16,12 @@ public interface Action {
 	UUID getPlayerUUID();
 
 	/**
-	 * Get the unique ID of the player taking the action.
+	 * Get the unique ID of the player taking the action, or 'console'
+	 * if the action was performed from the server console.
 	 *
-	 * @return The staff member's UUID
+	 * @return The staff member's UUID, or console
 	 */
-	UUID getStaffUUID();
+	String getStaff();
 
 	/**
 	 * Get the time when the action was taken.

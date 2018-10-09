@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Kick implements Action {
 
 	private UUID playerUUID;
-	private UUID staffUUID;
+	private String staff;
 	private Instant timestamp;
 	private String reason;
 
@@ -17,13 +17,13 @@ public class Kick implements Action {
 	 * Constructor.
 	 *
 	 * @param playerUUID The UUID of the player being kicked
-	 * @param staffUUID The UUID of the staff kicking the player
+	 * @param staff The UUID of the staff kicking the player, or 'console'
 	 * @param timestamp The {@link Instant} when the kick occurred
 	 * @param reason The reason given for the kick
 	 */
-	public Kick(UUID playerUUID, UUID staffUUID, Instant timestamp, String reason) {
+	public Kick(UUID playerUUID, String staff, Instant timestamp, String reason) {
 		this.playerUUID = playerUUID;
-		this.staffUUID = staffUUID;
+		this.staff = staff;
 		this.timestamp = timestamp;
 		this.reason = reason;
 	}
@@ -34,8 +34,8 @@ public class Kick implements Action {
 	}
 
 	@Override
-	public UUID getStaffUUID() {
-		return staffUUID;
+	public String getStaff() {
+		return staff;
 	}
 
 	@Override

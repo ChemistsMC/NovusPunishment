@@ -12,7 +12,7 @@ import java.util.UUID;
 public class TemporaryBan implements TemporaryAction {
 
 	private UUID playerUUID;
-	private UUID staffUUID;
+	private String staff;
 	private Instant timestamp;
 	private Instant expires;
 	private String reason;
@@ -21,14 +21,14 @@ public class TemporaryBan implements TemporaryAction {
 	 * Constructor.
 	 *
 	 * @param playerUUID The UUID of the player being banned
-	 * @param staffUUID The UUID of the staff banning the player
+	 * @param staff The UUID of the staff banning the player
 	 * @param timestamp The {@link Instant} when the ban occurred
 	 * @param expires The {@link Instant} that the ban will expire
 	 * @param reason The reason given for the ban
 	 */
-	public TemporaryBan(UUID playerUUID, UUID staffUUID, Instant timestamp, Instant expires, String reason) {
+	public TemporaryBan(UUID playerUUID, String staff, Instant timestamp, Instant expires, String reason) {
 		this.playerUUID = playerUUID;
-		this.staffUUID = staffUUID;
+		this.staff = staff;
 		this.timestamp = timestamp;
 		this.expires = expires;
 		this.reason = reason;
@@ -45,8 +45,8 @@ public class TemporaryBan implements TemporaryAction {
 	}
 
 	@Override
-	public UUID getStaffUUID() {
-		return staffUUID;
+	public String getStaff() {
+		return staff;
 	}
 
 	@Override

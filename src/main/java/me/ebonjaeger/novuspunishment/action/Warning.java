@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Warning implements Action {
 
 	private UUID playerUUID;
-	private UUID staffUUID;
+	private String staff;
 	private Instant timestamp;
 	private String reason;
 
@@ -20,13 +20,13 @@ public class Warning implements Action {
 	 * Constructor.
 	 *
 	 * @param playerUUID The UUID of the player being warned
-	 * @param staffUUID The UUID of the staff warning the player
+	 * @param staff The UUID of the staff warning the player
 	 * @param timestamp The {@link Instant} when the warning occurred
 	 * @param reason The reason given for the warning
 	 */
-	public Warning(UUID playerUUID, UUID staffUUID, Instant timestamp, String reason) {
+	public Warning(UUID playerUUID, String staff, Instant timestamp, String reason) {
 		this.playerUUID = playerUUID;
-		this.staffUUID = staffUUID;
+		this.staff = staff;
 		this.timestamp = timestamp;
 		this.reason = reason;
 	}
@@ -37,8 +37,8 @@ public class Warning implements Action {
 	}
 
 	@Override
-	public UUID getStaffUUID() {
-		return staffUUID;
+	public String getStaff() {
+		return staff;
 	}
 
 	@Override

@@ -137,7 +137,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveWarningStmt(prefix))) {
 			statement.setString(1, warning.getPlayerUUID().toString());
-			statement.setString(2, warning.getStaffUUID().toString());
+			statement.setString(2, warning.getStaff().toString());
 			statement.setTimestamp(3, Timestamp.from(warning.getTimestamp()));
 			statement.setString(4, warning.getReason());
 
@@ -156,7 +156,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveTempbanStmt(prefix))) {
 			statement.setString(1, mute.getPlayerUUID().toString());
-			statement.setString(2, mute.getStaffUUID().toString());
+			statement.setString(2, mute.getStaff());
 			statement.setTimestamp(3, Timestamp.from(mute.getTimestamp()));
 			statement.setTimestamp(4, Timestamp.from(mute.getExpires()));
 			statement.setString(5, mute.getReason());
@@ -176,7 +176,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveKickStmt(prefix))) {
 			statement.setString(1, kick.getPlayerUUID().toString());
-			statement.setString(2, kick.getStaffUUID().toString());
+			statement.setString(2, kick.getStaff());
 			statement.setTimestamp(3, Timestamp.from(kick.getTimestamp()));
 			statement.setString(4, kick.getReason());
 
@@ -195,7 +195,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveTempbanStmt(prefix))) {
 			statement.setString(1, tempban.getPlayerUUID().toString());
-			statement.setString(2, tempban.getStaffUUID().toString());
+			statement.setString(2, tempban.getStaff().toString());
 			statement.setTimestamp(3, Timestamp.from(tempban.getTimestamp()));
 			statement.setTimestamp(4, Timestamp.from(tempban.getExpires()));
 			statement.setString(5, tempban.getReason());
@@ -215,7 +215,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveBanStmt(prefix))) {
 			statement.setString(1, ban.getPlayerUUID().toString());
-			statement.setString(2, ban.getStaffUUID().toString());
+			statement.setString(2, ban.getStaff().toString());
 			statement.setTimestamp(3, Timestamp.from(ban.getTimestamp()));
 			statement.setString(3, ban.getReason());
 
@@ -277,7 +277,7 @@ public class MySQL {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				// Put all of the row's data into objects
-				UUID staffUUID = UUID.fromString(resultSet.getString(Columns.STAFF_UUID));
+				String staff = resultSet.getString(Columns.STAFF_UUID);
 				Instant timestamp = resultSet.getTimestamp(Columns.TIMESTAMP).toInstant();
 				String reason = resultSet.getString(Columns.REASON);
 
@@ -296,19 +296,19 @@ public class MySQL {
 				String type = resultSet.getString(Columns.TYPE);
 				switch (type) {
 					case "warning":
-						actions.add(new Warning(playerUUID, staffUUID, timestamp, reason));
+						actions.add(new Warning(playerUUID, staff, timestamp, reason));
 						break;
 					case "mute":
-						actions.add(new Mute(playerUUID, staffUUID, timestamp, expires, reason));
+						actions.add(new Mute(playerUUID, staff, timestamp, expires, reason));
 						break;
 					case "kick":
-						actions.add(new Kick(playerUUID, staffUUID, timestamp, reason));
+						actions.add(new Kick(playerUUID, staff, timestamp, reason));
 						break;
 					case "tempban":
-						actions.add(new TemporaryBan(playerUUID, staffUUID, timestamp, expires, reason));
+						actions.add(new TemporaryBan(playerUUID, staff, timestamp, expires, reason));
 						break;
 					case "permban":
-						actions.add(new PermanentBan(playerUUID, staffUUID, timestamp, reason));
+						actions.add(new PermanentBan(playerUUID, staff, timestamp, reason));
 						break;
 					default:
 						throw new IllegalArgumentException(String.format("Unknown action type in database: %s", type));
@@ -368,12 +368,12 @@ public class MySQL {
 
 			ResultSet result = statement.executeQuery();
 			if (result != null && result.next()) {
-				UUID staffUniqueID = UUID.fromString(result.getString(Columns.STAFF_UUID));
+				String staff = result.getString(Columns.STAFF_UUID);
 				Instant timeStamp = result.getTimestamp(Columns.TIMESTAMP).toInstant();
 				Instant expires = result.getTimestamp(Columns.EXPIRES).toInstant();
 				String reason = result.getString(Columns.REASON);
 
-				return new TemporaryBan(uniqueID, staffUniqueID, timeStamp, expires, reason);
+				return new TemporaryBan(uniqueID, staff, timeStamp, expires, reason);
 			}
 		} catch (SQLException ex) {
 			ConsoleLogger.severe(String.format("Unable to get latest tempban for '%s':", uniqueID.toString()), ex);
