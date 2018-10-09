@@ -4,6 +4,7 @@ import ch.jalu.injector.Injector;
 import ch.jalu.injector.InjectorBuilder;
 import co.aikar.commands.PaperCommandManager;
 import me.ebonjaeger.novuspunishment.command.KickCommand;
+import me.ebonjaeger.novuspunishment.command.WarnCommand;
 import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
 import me.ebonjaeger.novuspunishment.listener.PlayerLoginListener;
@@ -27,6 +28,7 @@ public class NovusPunishment extends JavaPlugin {
 	private boolean isShuttingDown = false;
 
 	private Map<UUID, PlayerState> playerStates = new HashMap<>();
+	private Map<UUID, Integer> playerWarnings = new HashMap<>();
 
 	@Override
 	public void onEnable() {
@@ -60,6 +62,7 @@ public class NovusPunishment extends JavaPlugin {
 			dataSource.savePlayerState(state);
 		}
 		playerStates.clear();
+		playerWarnings.clear();
 
 		dataSource.close();
 	}
@@ -67,6 +70,7 @@ public class NovusPunishment extends JavaPlugin {
 	private void registerCommands(Injector injector) {
 		PaperCommandManager commandManager = new PaperCommandManager(this);
 
+		commandManager.registerCommand(injector.getSingleton(WarnCommand.class));
 		commandManager.registerCommand(injector.getSingleton(KickCommand.class));
 	}
 
@@ -94,6 +98,20 @@ public class NovusPunishment extends JavaPlugin {
 		}
 
 		sender.sendMessage(finalMessage);
+	}
+
+	public void incrementWarnings(UUID uuid) {
+		int count = 0;
+
+		if (playerWarnings.containsKey(uuid)) {
+			count = playerWarnings.get(uuid);
+		}
+
+		playerWarnings.put(uuid, ++count);
+	}
+
+	public int getWarnings(UUID uuid) {
+		return playerWarnings.getOrDefault(uuid, 0);
 	}
 
 	// TODO: Maybe create some sort of state manager class for the next three methods

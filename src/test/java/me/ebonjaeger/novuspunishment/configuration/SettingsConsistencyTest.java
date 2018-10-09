@@ -24,9 +24,9 @@ import static org.hamcrest.Matchers.equalTo;
 public class SettingsConsistencyTest {
 
 	/** Bukkit's FileConfiguration#getKeys returns all inner nodes also. We want to exclude those in tests. */
-	private static final List<String> YAML_INNER_NODES = ImmutableList.of("database");
+	private static final List<String> YAML_INNER_NODES = ImmutableList.of("database", "actions");
 
-	private final ConfigurationData configData = ConfigurationDataBuilder.createConfiguration(DatabaseSettings.class);
+	private final ConfigurationData configData = ConfigurationDataBuilder.createConfiguration(DatabaseSettings.class, ActionSettings.class);
 	private final FileConfiguration ymlConfiguration = YamlConfiguration.loadConfiguration(getJarFile("/config.yml"));
 
 	@Test

@@ -11,4 +11,7 @@ database:
   name: 'minecraft'
   # Prefix to use for all table names, to prevent table conflict
   table-prefix: 'np_'
-
+actions:
+  # Number of warnings a player can have in a session before they are automatically kicked
+  # Set to 0 to disable
+  warns-until-kick: 0

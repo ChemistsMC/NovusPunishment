@@ -1,0 +1,14 @@
+package me.ebonjaeger.novuspunishment.configuration;
+
+import ch.jalu.configme.Comment;
+import ch.jalu.configme.SettingsHolder;
+import ch.jalu.configme.properties.Property;
+
+import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
+
+public class ActionSettings implements SettingsHolder {
+
+	@Comment({"Number of warnings a player can have in a session before they are automatically kicked",
+			"Set to 0 to disable"})
+	public static final Property<Integer> WARNS_UNTIL_KICK = newProperty("actions.warns-until-kick", 0);
+}
