@@ -37,6 +37,11 @@ public class KickCommand extends BaseCommand {
 		Player target = player.getPlayer();
 		String fullReason = String.join(", ", reason);
 
+		if (sender instanceof Player && target.equals(sender)) {
+			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
+			return;
+		}
+
 		if (target.hasPermission("newpunish.bypass.kick")) {
 			plugin.sendMessage(sender, Message.KICK_EXEMPT, target.getName());
 			return;
@@ -52,11 +57,11 @@ public class KickCommand extends BaseCommand {
 
 		bukkitService.runTaskAsync(() -> dataSource.saveKick(kick));
 
-		target.kickPlayer(Utils.formatKickMessage(fullReason));
+		target.kickPlayer(Utils.formatKickMessage(kick.getReason()));
 
 		for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
 			if (onlinePlayer.hasPermission("newpunish.notify.kick")) {
-				plugin.sendMessage(onlinePlayer, Message.KICK_NOTIFICATION, target.getName(), fullReason);
+				plugin.sendMessage(onlinePlayer, Message.KICK_NOTIFICATION, target.getName(), kick.getReason());
 			}
 		}
 	}
