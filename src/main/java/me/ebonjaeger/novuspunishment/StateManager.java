@@ -1,6 +1,7 @@
 package me.ebonjaeger.novuspunishment;
 
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
+import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -41,6 +42,19 @@ public class StateManager {
 	 */
 	public PlayerState getPlayerState(UUID uniqueID) {
 		return playerStates.get(uniqueID);
+	}
+
+	/**
+	 * Get an already created {@link PlayerState} for
+	 * a player if one exists, or create a new one.
+	 * The newly created state will not be added to the cache.
+	 *
+	 * @param player The {@link Player} to get the state for
+	 * @return The current state data for the player
+	 */
+	public PlayerState getOrCreateState(Player player) {
+		return playerStates.getOrDefault(player.getUniqueId(),
+				new PlayerState(player.getUniqueId(), player.getName(), false));
 	}
 
 	/**

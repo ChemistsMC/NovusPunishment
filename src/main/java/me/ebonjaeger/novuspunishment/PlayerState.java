@@ -1,5 +1,6 @@
 package me.ebonjaeger.novuspunishment;
 
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -10,7 +11,7 @@ public class PlayerState {
 	private UUID uniqueID;
 	private String userName;
 	private boolean isMuted;
-	private boolean isBanned;
+	private Instant until;
 
 	/**
 	 * Constructor.
@@ -18,13 +19,27 @@ public class PlayerState {
 	 * @param uniqueID The {@link UUID} of the player
 	 * @param userName The player's current user name
 	 * @param isMuted If the player is currently muted
-	 * @param isBanned If the player is currently banned
 	 */
-	public PlayerState(UUID uniqueID, String userName, boolean isMuted, boolean isBanned) {
+	public PlayerState(UUID uniqueID, String userName, boolean isMuted) {
 		this.uniqueID = uniqueID;
 		this.userName = userName;
 		this.isMuted = isMuted;
-		this.isBanned = isBanned;
+		this.until = null;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param uniqueID The {@link UUID} of the player
+	 * @param userName The player's current user name
+	 * @param isMuted If the player is currently muted
+	 * @param until Time when the player should no longer be muted
+	 */
+	public PlayerState(UUID uniqueID, String userName, boolean isMuted, Instant until) {
+		this.uniqueID = uniqueID;
+		this.userName = userName;
+		this.isMuted = isMuted;
+		this.until = until;
 	}
 
 	/**
@@ -74,21 +89,21 @@ public class PlayerState {
 	}
 
 	/**
-	 * Get if the player is currently banned, and thus unable to
-	 * join the server.
+	 * Get the time when the player should no longer be muted.
+	 * Will be {@code null} if the player is not currently muted.
 	 *
-	 * @return True if the player is banned
+	 * @return {@link Instant} when the player is unmuted, or {@code null}
 	 */
-	public boolean isBanned() {
-		return isBanned;
+	public Instant getUntil() {
+		return until;
 	}
 
 	/**
-	 * Set if the player is banned.
+	 * Set when the player should be unmuted.
 	 *
-	 * @param banned True if the player should now be banned
+	 * @param until New time when the player should be unmuted
 	 */
-	public void setBanned(boolean banned) {
-		isBanned = banned;
+	public void setUntil(Instant until) {
+		this.until = until;
 	}
 }

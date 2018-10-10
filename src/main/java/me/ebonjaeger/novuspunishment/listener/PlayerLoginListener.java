@@ -53,10 +53,7 @@ public class PlayerLoginListener implements Listener {
 
 				if (state != null) {
 					bukkitService.runTask(() -> {
-						state.setBanned(false);
 						stateManager.addPlayerState(player.getUniqueId(), state);
-
-						// TODO: Handle if the player is supposed to be muted
 					});
 				}
 			}

@@ -4,6 +4,7 @@ import ch.jalu.injector.Injector;
 import ch.jalu.injector.InjectorBuilder;
 import co.aikar.commands.PaperCommandManager;
 import me.ebonjaeger.novuspunishment.command.KickCommand;
+import me.ebonjaeger.novuspunishment.command.MuteCommand;
 import me.ebonjaeger.novuspunishment.command.WarnCommand;
 import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
@@ -63,6 +64,7 @@ public class NovusPunishment extends JavaPlugin {
 	private void registerCommands(Injector injector) {
 		PaperCommandManager commandManager = new PaperCommandManager(this);
 
+		commandManager.registerCommand(injector.getSingleton(MuteCommand.class));
 		commandManager.registerCommand(injector.getSingleton(WarnCommand.class));
 		commandManager.registerCommand(injector.getSingleton(KickCommand.class));
 	}

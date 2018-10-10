@@ -24,7 +24,7 @@ class MySqlStatements {
 				Columns.UUID + " CHAR(36) NOT NULL UNIQUE," +
 				Columns.PLAYERNAME + " VARCHAR(16) NOT NULL," +
 				Columns.MUTED + " BOOLEAN NOT NULL," +
-				Columns.BANNED + " BOOLEAN NOT NULL," +
+				Columns.EXPIRES + " TIMESTAMP," +
 				"PRIMARY KEY (" + Columns.ID + "));";
 	}
 

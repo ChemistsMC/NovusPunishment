@@ -238,12 +238,12 @@ public class MySQL {
 			statement.setString(1, playerState.getUniqueID().toString());
 			statement.setString(2, playerState.getUserName());
 			statement.setBoolean(3, playerState.isMuted());
-			statement.setBoolean(4, playerState.isBanned());
+			statement.setTimestamp(4, Timestamp.from(playerState.getUntil()));
 
 			// UPDATE values
 			statement.setString(5, playerState.getUserName());
 			statement.setBoolean(6, playerState.isMuted());
-			statement.setBoolean(7, playerState.isBanned());
+			statement.setTimestamp(7, Timestamp.from(playerState.getUntil()));
 
 			statement.executeUpdate();
 		} catch (SQLException ex) {
@@ -340,11 +340,14 @@ public class MySQL {
 			if (result != null && result.next()) {
 				String userName = result.getString(Columns.PLAYERNAME);
 				boolean isMuted = result.getBoolean(Columns.MUTED);
-				boolean isBanned = result.getBoolean(Columns.BANNED);
+				Instant until = null;
+				if (result.getTimestamp(Columns.EXPIRES) != null) {
+					until = result.getTimestamp(Columns.EXPIRES).toInstant();
+				}
 
 				result.close();
 
-				return new PlayerState(uniqueID, userName, isMuted, isBanned);
+				return new PlayerState(uniqueID, userName, isMuted, until);
 			}
 		} catch (SQLException ex) {
 			ConsoleLogger.severe(String.format("Unable to get the current state for player with unique ID '%s'", uniqueID.toString()));
