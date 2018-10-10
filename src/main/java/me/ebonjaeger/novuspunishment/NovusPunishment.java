@@ -34,6 +34,8 @@ public class NovusPunishment extends JavaPlugin {
 			saveResource("config.yml", false);
 		}
 
+		ConsoleLogger.setLogger(getLogger());
+
 		// Injector
 		Injector injector = new InjectorBuilder().addDefaultHandlers("me.ebonjaeger.novuspunishment").create();
 		injector.register(NovusPunishment.class, this);
