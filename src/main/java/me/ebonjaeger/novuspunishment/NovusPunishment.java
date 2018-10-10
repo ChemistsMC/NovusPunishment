@@ -8,6 +8,7 @@ import me.ebonjaeger.novuspunishment.command.MuteCommand;
 import me.ebonjaeger.novuspunishment.command.WarnCommand;
 import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
+import me.ebonjaeger.novuspunishment.listener.PlayerChatListener;
 import me.ebonjaeger.novuspunishment.listener.PlayerLoginListener;
 import me.ebonjaeger.novuspunishment.listener.PlayerLogoutListener;
 import org.bukkit.Server;
@@ -47,6 +48,7 @@ public class NovusPunishment extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLoginListener.class), this);
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLogoutListener.class), this);
+		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerChatListener.class), this);
 
 		registerCommands(injector);
 	}

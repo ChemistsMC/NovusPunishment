@@ -12,6 +12,8 @@ public enum Message {
 	UNMUTE_PLAYER(Prefix.SUCCESS, "You have been unmuted!"),
 	UNMUTE_SUCCESS(Prefix.SUCCESS, "{0} has been unmuted!"),
 
+	CHAT_WHILE_MUTED(Prefix.NONE, ChatColor.RED + "You cannot send messages while muted!"),
+
 	KICK_EXEMPT(Prefix.ERROR, "{0} cannot be kicked from the server!"),
 	KICK_NOTIFICATION(Prefix.INFO, "{0} has been kicked from the server for: " + ChatColor.WHITE + "{1}"),
 
