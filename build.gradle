@@ -60,7 +60,12 @@ shadowJar.relocate('javax', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('org.slf4j', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('co.aikar', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('net.jodah', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('org.intellij', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('org.jetbrains', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('org.yaml', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.archiveName = rootProject.name + '-' + rootProject.version + '.jar'
 
-build.dependsOn clean
+compileJava.dependsOn clean
 build.dependsOn test
 build.dependsOn shadowJar
