@@ -35,7 +35,7 @@ public class MySQL {
 	private HikariDataSource dataSource;
 
 	@Inject
-	public MySQL(NovusPunishment plugin, SettingsManager settings) {
+	MySQL(NovusPunishment plugin, SettingsManager settings) {
 		this.plugin = plugin;
 
 		this.hostname = settings.getProperty(DatabaseSettings.DATABASE_HOSTNAME);

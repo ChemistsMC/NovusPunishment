@@ -24,7 +24,7 @@ public class KickCommand extends BaseCommand {
 	private MySQL dataSource;
 
 	@Inject
-	public KickCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource) {
+	KickCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource) {
 		this.plugin = plugin;
 		this.bukkitService = bukkitService;
 		this.dataSource = dataSource;

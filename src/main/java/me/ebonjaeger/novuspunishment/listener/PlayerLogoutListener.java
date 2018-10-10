@@ -21,7 +21,7 @@ public class PlayerLogoutListener implements Listener {
 	private StateManager stateManager;
 
 	@Inject
-	public PlayerLogoutListener(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, StateManager stateManager) {
+	PlayerLogoutListener(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, StateManager stateManager) {
 		this.plugin = plugin;
 		this.bukkitService = bukkitService;
 		this.dataSource = dataSource;

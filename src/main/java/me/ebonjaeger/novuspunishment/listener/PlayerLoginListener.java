@@ -15,14 +15,12 @@ import java.time.Instant;
 
 public class PlayerLoginListener implements Listener {
 
-	private NovusPunishment plugin;
 	private BukkitService bukkitService;
 	private MySQL dataSource;
 	private StateManager stateManager;
 
 	@Inject
-	public PlayerLoginListener(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, StateManager stateManager) {
-		this.plugin = plugin;
+	PlayerLoginListener(BukkitService bukkitService, MySQL dataSource, StateManager stateManager) {
 		this.bukkitService = bukkitService;
 		this.dataSource = dataSource;
 		this.stateManager = stateManager;
@@ -52,9 +50,7 @@ public class PlayerLoginListener implements Listener {
 				PlayerState state = dataSource.getPlayerState(player.getUniqueId());
 
 				if (state != null) {
-					bukkitService.runTask(() -> {
-						stateManager.addPlayerState(player.getUniqueId(), state);
-					});
+					bukkitService.runTask(() -> stateManager.addPlayerState(player.getUniqueId(), state));
 				}
 			}
 		});

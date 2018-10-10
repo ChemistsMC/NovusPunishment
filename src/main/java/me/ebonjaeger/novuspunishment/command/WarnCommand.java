@@ -25,7 +25,7 @@ public class WarnCommand extends BaseCommand {
 	private StateManager stateManager;
 
 	@Inject
-	public WarnCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, SettingsManager settings, StateManager stateManager) {
+	WarnCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, SettingsManager settings, StateManager stateManager) {
 		this.plugin = plugin;
 		this.bukkitService = bukkitService;
 		this.dataSource = dataSource;
