@@ -17,18 +17,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class NovusPunishment extends JavaPlugin {
 
 	private MySQL dataSource;
+	private StateManager stateManager;
 
 	private boolean isShuttingDown = false;
-
-	private Map<UUID, PlayerState> playerStates = new HashMap<>();
-	private Map<UUID, Integer> playerWarnings = new HashMap<>();
 
 	@Override
 	public void onEnable() {
@@ -47,6 +42,7 @@ public class NovusPunishment extends JavaPlugin {
 		injector.register(SettingsManager.class, settingsManager);
 
 		this.dataSource = injector.getSingleton(MySQL.class);
+		this.stateManager = injector.getSingleton(StateManager.class);
 
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLoginListener.class), this);
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLogoutListener.class), this);
@@ -57,12 +53,7 @@ public class NovusPunishment extends JavaPlugin {
 		getServer().getScheduler().cancelTasks(this);
 		this.isShuttingDown = true;
 
-		// Save all player states in memory to the disk
-		for (PlayerState state : playerStates.values()) {
-			dataSource.savePlayerState(state);
-		}
-		playerStates.clear();
-		playerWarnings.clear();
+		stateManager.flushStates();
 
 		dataSource.close();
 	}
@@ -98,53 +89,5 @@ public class NovusPunishment extends JavaPlugin {
 		}
 
 		sender.sendMessage(finalMessage);
-	}
-
-	public void incrementWarnings(UUID uuid) {
-		int count = 0;
-
-		if (playerWarnings.containsKey(uuid)) {
-			count = playerWarnings.get(uuid);
-		}
-
-		playerWarnings.put(uuid, ++count);
-	}
-
-	public int getWarnings(UUID uuid) {
-		return playerWarnings.getOrDefault(uuid, 0);
-	}
-
-	// TODO: Maybe create some sort of state manager class for the next three methods
-
-	/**
-	 * Add a new {@link PlayerState} into memory.
-	 *
-	 * @param uniqueID The player's unique ID
-	 * @param playerState The player's current state
-	 */
-	public void addPlayerState(UUID uniqueID, PlayerState playerState) {
-		playerStates.put(uniqueID, playerState);
-	}
-
-	/**
-	 * Get a loaded {@link PlayerState} for the given {@link UUID}.
-	 * Will return {@code null} if no state for the player is currently
-	 * in memory.
-	 *
-	 * @param uniqueID The player's unique ID
-	 * @return The player's state, or null
-	 */
-	public PlayerState getPlayerState(UUID uniqueID) {
-		return playerStates.get(uniqueID);
-	}
-
-	/**
-	 * Remove a {@link PlayerState} from memory, e.g. when a player
-	 * is leaving the server.
-	 *
-	 * @param uniqueID The unique ID of the player
-	 */
-	public void removePlayerState(UUID uniqueID) {
-		playerStates.remove(uniqueID);
 	}
 }

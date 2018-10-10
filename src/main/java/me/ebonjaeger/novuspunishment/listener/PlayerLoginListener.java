@@ -1,9 +1,6 @@
 package me.ebonjaeger.novuspunishment.listener;
 
-import me.ebonjaeger.novuspunishment.BukkitService;
-import me.ebonjaeger.novuspunishment.NovusPunishment;
-import me.ebonjaeger.novuspunishment.PlayerState;
-import me.ebonjaeger.novuspunishment.Utils;
+import me.ebonjaeger.novuspunishment.*;
 import me.ebonjaeger.novuspunishment.action.TemporaryBan;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
 import org.bukkit.entity.Player;
@@ -21,12 +18,14 @@ public class PlayerLoginListener implements Listener {
 	private NovusPunishment plugin;
 	private BukkitService bukkitService;
 	private MySQL dataSource;
+	private StateManager stateManager;
 
 	@Inject
-	public PlayerLoginListener(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource) {
+	public PlayerLoginListener(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, StateManager stateManager) {
 		this.plugin = plugin;
 		this.bukkitService = bukkitService;
 		this.dataSource = dataSource;
+		this.stateManager = stateManager;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -55,7 +54,7 @@ public class PlayerLoginListener implements Listener {
 				if (state != null) {
 					bukkitService.runTask(() -> {
 						state.setBanned(false);
-						plugin.addPlayerState(player.getUniqueId(), state);
+						stateManager.addPlayerState(player.getUniqueId(), state);
 
 						// TODO: Handle if the player is supposed to be muted
 					});

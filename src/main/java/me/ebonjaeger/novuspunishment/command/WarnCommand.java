@@ -6,10 +6,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.contexts.OnlinePlayer;
-import me.ebonjaeger.novuspunishment.BukkitService;
-import me.ebonjaeger.novuspunishment.Message;
-import me.ebonjaeger.novuspunishment.NovusPunishment;
-import me.ebonjaeger.novuspunishment.Utils;
+import me.ebonjaeger.novuspunishment.*;
 import me.ebonjaeger.novuspunishment.action.Warning;
 import me.ebonjaeger.novuspunishment.configuration.ActionSettings;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
@@ -25,13 +22,15 @@ public class WarnCommand extends BaseCommand {
 	private BukkitService bukkitService;
 	private MySQL dataSource;
 	private SettingsManager settings;
+	private StateManager stateManager;
 
 	@Inject
-	public WarnCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, SettingsManager settings) {
+	public WarnCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, SettingsManager settings, StateManager stateManager) {
 		this.plugin = plugin;
 		this.bukkitService = bukkitService;
 		this.dataSource = dataSource;
 		this.settings = settings;
+		this.stateManager = stateManager;
 	}
 
 	@CommandAlias("warn")
@@ -61,8 +60,8 @@ public class WarnCommand extends BaseCommand {
 
 		bukkitService.runTaskAsync(() -> dataSource.saveWarning(warning));
 
-		plugin.incrementWarnings(target.getUniqueId());
-		int sessionCount = plugin.getWarnings(target.getUniqueId());
+		stateManager.incrementWarnings(target.getUniqueId());
+		int sessionCount = stateManager.getWarnings(target.getUniqueId());
 		int warnLimit = settings.getProperty(ActionSettings.WARNS_UNTIL_KICK);
 
 		if (warnLimit > 0 && sessionCount % warnLimit == 0) {
