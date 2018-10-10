@@ -59,10 +59,8 @@ public class KickCommand extends BaseCommand {
 
 		target.kickPlayer(Utils.formatKickMessage(kick.getReason()));
 
-		for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
-			if (onlinePlayer.hasPermission("newpunish.notify.kick")) {
-				plugin.sendMessage(onlinePlayer, Message.KICK_NOTIFICATION, target.getName(), kick.getReason());
-			}
-		}
+		plugin.getServer().getOnlinePlayers().stream()
+				.filter(onlinePlayer -> hasPermission("newpunish.notify.kick"))
+				.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.KICK_NOTIFICATION, target.getName(), kick.getReason()));
 	}
 }

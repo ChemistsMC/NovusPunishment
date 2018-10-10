@@ -71,10 +71,8 @@ public class WarnCommand extends BaseCommand {
 			plugin.sendMessage(target, Message.WARN_PLAYER, warning.getReason());
 		}
 
-		for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
-			if (!onlinePlayer.equals(target) && onlinePlayer.hasPermission("newpunish.notify.warn")) {
-				plugin.sendMessage(onlinePlayer, Message.WARN_NOTIFICATION, target.getName(), warning.getReason());
-			}
-		}
+		plugin.getServer().getOnlinePlayers().stream()
+				.filter(onlinePlayer -> hasPermission("newpunish.notify.warn"))
+				.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.WARN_NOTIFICATION, target.getName(), warning.getReason()));
 	}
 }
