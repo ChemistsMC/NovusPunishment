@@ -46,6 +46,8 @@ public class NovusPunishment extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLoginListener.class), this);
 		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLogoutListener.class), this);
+
+		registerCommands(injector);
 	}
 
 	@Override
