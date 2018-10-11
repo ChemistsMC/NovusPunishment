@@ -3,10 +3,7 @@ package me.ebonjaeger.novuspunishment;
 import ch.jalu.injector.Injector;
 import ch.jalu.injector.InjectorBuilder;
 import co.aikar.commands.PaperCommandManager;
-import me.ebonjaeger.novuspunishment.command.BanCommand;
-import me.ebonjaeger.novuspunishment.command.KickCommand;
-import me.ebonjaeger.novuspunishment.command.MuteCommand;
-import me.ebonjaeger.novuspunishment.command.WarnCommand;
+import me.ebonjaeger.novuspunishment.command.*;
 import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
 import me.ebonjaeger.novuspunishment.listener.PlayerChatListener;
@@ -72,6 +69,7 @@ public class NovusPunishment extends JavaPlugin {
 		commandManager.registerCommand(injector.getSingleton(MuteCommand.class));
 		commandManager.registerCommand(injector.getSingleton(WarnCommand.class));
 		commandManager.registerCommand(injector.getSingleton(KickCommand.class));
+		commandManager.registerCommand(injector.getSingleton(TempbanCommand.class));
 		commandManager.registerCommand(injector.getSingleton(BanCommand.class));
 	}
 

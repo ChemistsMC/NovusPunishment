@@ -24,8 +24,8 @@ public class Utils {
 	}
 
 	public static String formatTempbanMessage(String reason, Duration duration) {
-		return String.format(ChatColor.GRAY + "You have been temporarily banned!\n " +
-				ChatColor.GRAY + "For another: " + ChatColor.WHITE + "%s\n " +
+		return String.format(ChatColor.GRAY + "You have been temporarily banned from the server!\n" +
+				ChatColor.GRAY + "Duration: " + ChatColor.WHITE + "%s\n" +
 				ChatColor.GRAY + "Reason: " + ChatColor.RED + "%s", formatDuration(duration), reason);
 	}
 
