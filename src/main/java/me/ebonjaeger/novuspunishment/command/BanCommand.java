@@ -35,7 +35,7 @@ public class BanCommand extends BaseCommand {
 	@CommandAlias("ban")
 	@CommandPermission("newpunish.command.ban")
 	@CommandCompletion("@players")
-	public void onCommand(CommandSender sender, String name, String... rawReason) {
+	public void onCommand(CommandSender sender, String name, String... reason) {
 		// Attempt to get the target player
 		bukkitService.runTaskAsync(() -> {
 			OfflinePlayer target = bukkitService.matchPlayer(name, true);
@@ -66,14 +66,14 @@ public class BanCommand extends BaseCommand {
 					staff = ((Player) sender).getUniqueId().toString();
 				}
 
-				String reason = String.join(", ", rawReason);
+				String _reason = String.join(", ", reason);
 				Instant timestamp = Instant.now();
-				PermanentBan ban = new PermanentBan(target.getUniqueId(), staff, timestamp, reason);
+				PermanentBan ban = new PermanentBan(target.getUniqueId(), staff, timestamp, _reason);
 
 				bukkitService.runTaskAsync(() -> dataSource.saveBan(ban));
 
 				// Add ban entry and kick from the server if online
-				Bukkit.getBanList(BanList.Type.NAME).addBan(target.getName(), reason, null, sender.getName());
+				Bukkit.getBanList(BanList.Type.NAME).addBan(target.getName(), _reason, null, sender.getName());
 				if (target.isOnline()) {
 					target.getPlayer().kickPlayer(Utils.formatBanMessage(ban.getReason()));
 				}

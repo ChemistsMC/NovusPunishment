@@ -36,9 +36,9 @@ public class WarnCommand extends BaseCommand {
 	@CommandAlias("warn")
 	@CommandPermission("newpunish.command.warn")
 	@CommandCompletion("@players")
-	public void onCommand(CommandSender sender, OnlinePlayer player, String[] reason) {
+	public void onCommand(CommandSender sender, OnlinePlayer player, String... reason) {
 		Player target = player.getPlayer();
-		String fullReason = String.join(", ", reason);
+		String _reason = String.join(", ", reason);
 
 		if (sender.getName().equals(target.getName())) {
 			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
@@ -56,7 +56,7 @@ public class WarnCommand extends BaseCommand {
 		}
 
 		Instant timestamp = Instant.now();
-		Warning warning = new Warning(target.getUniqueId(), staff, timestamp, fullReason);
+		Warning warning = new Warning(target.getUniqueId(), staff, timestamp, _reason);
 
 		bukkitService.runTaskAsync(() -> dataSource.saveWarning(warning));
 

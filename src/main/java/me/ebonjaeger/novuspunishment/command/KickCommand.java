@@ -35,7 +35,7 @@ public class KickCommand extends BaseCommand {
 	@CommandCompletion("@players")
 	public void onCommand(CommandSender sender, OnlinePlayer player, String[] reason) {
 		Player target = player.getPlayer();
-		String fullReason = String.join(", ", reason);
+		String _reason = String.join(", ", reason);
 
 		if (sender.getName().equals(target.getName())) {
 			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
@@ -53,7 +53,7 @@ public class KickCommand extends BaseCommand {
 		}
 
 		Instant timestamp = Instant.now();
-		Kick kick = new Kick(target.getUniqueId(), staff, timestamp, fullReason);
+		Kick kick = new Kick(target.getUniqueId(), staff, timestamp, _reason);
 
 		bukkitService.runTaskAsync(() -> dataSource.saveKick(kick));
 

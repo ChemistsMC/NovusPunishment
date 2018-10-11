@@ -35,9 +35,9 @@ public class MuteCommand extends BaseCommand {
 	@CommandCompletion("@players")
 	public void onCommand(CommandSender sender, OnlinePlayer player, @Optional String duration, @Optional String... reason) {
 		Player target = player.getPlayer();
-		String fullReason = "";
+		String _reason = "";
 		if (reason != null) {
-			fullReason = String.join(", ", reason);
+			_reason = String.join(", ", reason);
 		}
 
 		if (sender.getName().equals(target.getName())) {
@@ -79,7 +79,7 @@ public class MuteCommand extends BaseCommand {
 			}
 		}
 
-		Mute mute = new Mute(target.getUniqueId(), staff, timestamp, expires, fullReason);
+		Mute mute = new Mute(target.getUniqueId(), staff, timestamp, expires, _reason);
 		bukkitService.runTaskAsync(() -> dataSource.saveMute(mute));
 
 		PlayerState state = stateManager.getOrCreateState(target);
