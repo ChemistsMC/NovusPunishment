@@ -71,6 +71,7 @@ public class NovusPunishment extends JavaPlugin {
 		commandManager.registerCommand(injector.getSingleton(KickCommand.class));
 		commandManager.registerCommand(injector.getSingleton(TempbanCommand.class));
 		commandManager.registerCommand(injector.getSingleton(BanCommand.class));
+		commandManager.registerCommand(injector.getSingleton(UnbanCommand.class));
 	}
 
 	public boolean isShuttingDown() {

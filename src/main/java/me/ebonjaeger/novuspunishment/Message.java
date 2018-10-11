@@ -28,6 +28,9 @@ public enum Message {
 	BAN_EXEMPT(Prefix.ERROR, "{0} cannot be banned from the server!"),
 	BAN_NOTIFICATION(Prefix.INFO, "[0} has been permanently banned from the server for: " + ChatColor.WHITE + "{1}"),
 
+	PLAYER_UNBANNED(Prefix.INFO, "{0} has been unbanned from the server!"),
+	PLAYER_NOT_BANNED(Prefix.ERROR, "{0} is not currently banned!"),
+
 	UNKNOWN_PLAYER(Prefix.ERROR, "Player '{0}' could not be found!"),
 	INVALID_DURATION(Prefix.ERROR, "Invalid time duration format: " + ChatColor.WHITE);
 

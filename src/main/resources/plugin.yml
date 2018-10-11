@@ -50,6 +50,7 @@ permissions:
       newpunish.notify.kick: true
       newpunish.notify.tempban: true
       newpunish.notify.ban: true
+      newpunish.notify.unban: true
   newpunish.bypass.mute:
     default: false
   newpunish.bypass.warn:
@@ -83,4 +84,6 @@ permissions:
   newpunish.notify.tempban:
     default: false
   newpunish.notify.ban:
+    default: false
+  newpunish.notify.unban:
     default: false
