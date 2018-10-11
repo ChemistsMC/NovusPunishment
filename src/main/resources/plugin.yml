@@ -3,7 +3,7 @@ version: 0.0.1
 main: me.ebonjaeger.novuspunishment.NovusPunishment
 authors: [EbonJaeger]
 softdepend: [Essentials, Vault]
-api-version: 1.13.1
+api-version: 1.13
 
 commands:
   mute:
