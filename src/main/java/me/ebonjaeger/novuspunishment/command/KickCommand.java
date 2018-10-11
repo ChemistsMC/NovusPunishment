@@ -37,7 +37,7 @@ public class KickCommand extends BaseCommand {
 		Player target = player.getPlayer();
 		String fullReason = String.join(", ", reason);
 
-		if (sender instanceof Player && target.equals(sender)) {
+		if (sender.getName().equals(target.getName())) {
 			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
 			return;
 		}
