@@ -32,7 +32,7 @@ public class BanCommand extends BaseCommand {
 		this.dataSource = dataSource;
 	}
 
-	@CommandAlias("kick")
+	@CommandAlias("ban")
 	@CommandPermission("newpunish.command.ban")
 	@CommandCompletion("@players")
 	public void onCommand(CommandSender sender, String name, String... rawReason) {

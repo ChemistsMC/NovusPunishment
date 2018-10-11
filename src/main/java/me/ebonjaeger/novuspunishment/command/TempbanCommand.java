@@ -34,7 +34,7 @@ public class TempbanCommand extends BaseCommand {
 		this.dataSource = dataSource;
 	}
 
-	@CommandAlias("kick")
+	@CommandAlias("tempban|tb")
 	@CommandPermission("newpunish.command.tempban")
 	@CommandCompletion("@players")
 	public void onCommand(CommandSender sender, OnlinePlayer player, String duration, String... reason) {
