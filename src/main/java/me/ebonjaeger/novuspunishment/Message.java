@@ -21,6 +21,11 @@ public enum Message {
 	WARN_PLAYER(Prefix.NONE, ChatColor.RED + "You have been warned for: " + ChatColor.WHITE + "{0}"),
 	WARN_NOTIFICATION(Prefix.INFO, "{0} has been warned for: " + ChatColor.WHITE + "{1}"),
 
+	ALREADY_BANNED(Prefix.ERROR, "{0} is already banned!"),
+	BAN_EXEMPT(Prefix.ERROR, "{0} cannot be banned from the server!"),
+	BAN_NOTIFICATION(Prefix.INFO, "[0} has been permanently banned from the server for: " + ChatColor.WHITE + "{1}"),
+
+	UNKNOWN_PLAYER(Prefix.ERROR, "Player '{0}' could not be found!"),
 	INVALID_DURATION(Prefix.ERROR, "Invalid time duration format: " + ChatColor.WHITE);
 
 	private Prefix prefix;

@@ -29,6 +29,11 @@ public class Utils {
 				ChatColor.GRAY + "Reason: " + ChatColor.RED + "%s", formatDuration(duration), reason);
 	}
 
+	public static String formatBanMessage(String reason) {
+		return String.format(ChatColor.GRAY + "You have been permanently banned from the server!\n" +
+		ChatColor.GRAY + "Reason: " + ChatColor.RED + "%s", reason);
+	}
+
 	/**
 	 * Parse a user-given String to add a unit of time to a given {@link Instant}.
 	 * It is assumed that the argument passed in will be a number followed by one letter.

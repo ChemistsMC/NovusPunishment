@@ -3,6 +3,7 @@ package me.ebonjaeger.novuspunishment;
 import ch.jalu.injector.Injector;
 import ch.jalu.injector.InjectorBuilder;
 import co.aikar.commands.PaperCommandManager;
+import me.ebonjaeger.novuspunishment.command.BanCommand;
 import me.ebonjaeger.novuspunishment.command.KickCommand;
 import me.ebonjaeger.novuspunishment.command.MuteCommand;
 import me.ebonjaeger.novuspunishment.command.WarnCommand;
@@ -71,6 +72,7 @@ public class NovusPunishment extends JavaPlugin {
 		commandManager.registerCommand(injector.getSingleton(MuteCommand.class));
 		commandManager.registerCommand(injector.getSingleton(WarnCommand.class));
 		commandManager.registerCommand(injector.getSingleton(KickCommand.class));
+		commandManager.registerCommand(injector.getSingleton(BanCommand.class));
 	}
 
 	public boolean isShuttingDown() {

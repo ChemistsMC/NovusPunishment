@@ -22,6 +22,10 @@ repositories {
     maven {
         url = "https://repo.aikar.co/content/groups/aikar/"
     }
+
+    maven {
+        url = 'http://nexus.hc.to/content/repositories/pub_releases'
+    }
 }
 
 dependencies {
@@ -47,6 +51,8 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
 
     compile "co.aikar:acf-paper:0.5.0-SNAPSHOT"
+
+    compileOnly group: 'net.milkbowl.vault', name: 'VaultAPI', version: '1.7'
 }
 
 compileJava {
