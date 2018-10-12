@@ -28,7 +28,7 @@ public class UnbanCommand extends BaseCommand {
 
 			// Notify players
 			plugin.getServer().getOnlinePlayers().stream()
-					.filter(onlinePlayer -> hasPermission("newpunish.notify.unban"))
+					.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.unban"))
 					.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.PLAYER_UNBANNED, name));
 		} else {
 			plugin.sendMessage(sender, Message.PLAYER_NOT_BANNED, name);

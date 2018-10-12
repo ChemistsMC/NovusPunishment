@@ -79,7 +79,7 @@ public class TempbanCommand extends BaseCommand {
 
 		// Notify players
 		plugin.getServer().getOnlinePlayers().stream()
-				.filter(onlinePlayer -> hasPermission("newpunish.notify.tempban"))
+				.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.tempban"))
 				.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.TEMPBAN_NOTIFICATION, target.getName(), tempban.getReason()));
 	}
 }
