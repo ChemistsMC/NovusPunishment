@@ -1,6 +1,5 @@
 package me.ebonjaeger.novuspunishment.command;
 
-import ch.jalu.configme.SettingsManager;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
@@ -9,6 +8,7 @@ import co.aikar.commands.contexts.OnlinePlayer;
 import me.ebonjaeger.novuspunishment.*;
 import me.ebonjaeger.novuspunishment.action.Warning;
 import me.ebonjaeger.novuspunishment.configuration.ActionSettings;
+import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
