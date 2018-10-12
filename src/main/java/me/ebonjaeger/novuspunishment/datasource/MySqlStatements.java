@@ -54,7 +54,7 @@ class MySqlStatements {
 
 	static String savePlayerStmt(String prefix) {
 		return "INSERT INTO " + prefix + "player_state VALUES(null,?,?,?,?) " +
-				"ON DUPLICATE KEY UPDATE " + Columns.PLAYERNAME + "=?, " + Columns.MUTED + "=?, " + Columns.BANNED + "=?;";
+				"ON DUPLICATE KEY UPDATE " + Columns.PLAYERNAME + "=?, " + Columns.MUTED + "=?, " + Columns.EXPIRES + "=?;";
 	}
 
 	/*
