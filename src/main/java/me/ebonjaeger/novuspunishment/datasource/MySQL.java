@@ -217,7 +217,7 @@ public class MySQL {
 			statement.setString(1, ban.getPlayerUUID().toString());
 			statement.setString(2, ban.getStaff().toString());
 			statement.setTimestamp(3, Timestamp.from(ban.getTimestamp()));
-			statement.setString(3, ban.getReason());
+			statement.setString(4, ban.getReason());
 
 			statement.executeUpdate();
 		} catch (SQLException ex) {
