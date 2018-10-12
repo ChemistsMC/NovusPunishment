@@ -71,7 +71,7 @@ class MySqlStatements {
 	}
 
 	static String getPlayerStmt(String prefix) {
-		return "SELECT " + Columns.PLAYERNAME + ", " + Columns.MUTED + ", " + Columns.BANNED + " " +
+		return "SELECT " + Columns.PLAYERNAME + ", " + Columns.MUTED + ", " + Columns.EXPIRES + " " +
 				"FROM " + prefix + "player_state " +
 				"WHERE " + Columns.UUID + " =?;";
 	}

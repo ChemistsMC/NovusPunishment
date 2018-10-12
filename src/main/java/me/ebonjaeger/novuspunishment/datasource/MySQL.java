@@ -350,7 +350,7 @@ public class MySQL {
 				return new PlayerState(uniqueID, userName, isMuted, until);
 			}
 		} catch (SQLException ex) {
-			ConsoleLogger.severe(String.format("Unable to get the current state for player with unique ID '%s'", uniqueID.toString()));
+			ConsoleLogger.severe(String.format("Unable to get the current state for player with unique ID '%s'", uniqueID.toString()), ex);
 		}
 
 		return null;
