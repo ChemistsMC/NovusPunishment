@@ -59,7 +59,6 @@ compileJava {
 }
 
 shadowJar.relocate('ch.jalu', 'me.ebonjaeger.novuspunishment.libs')
-shadowJar.relocate('javax', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('org.slf4j', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('co.aikar', 'me.ebonjaeger.novuspunishment.libs')
