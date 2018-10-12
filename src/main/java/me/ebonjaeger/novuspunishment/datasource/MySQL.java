@@ -154,7 +154,7 @@ public class MySQL {
 	 */
 	public void saveMute(Mute mute) {
 		try (Connection conn = getConnection();
-			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveTempbanStmt(prefix))) {
+			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveMuteStmt(prefix))) {
 			statement.setString(1, mute.getPlayerUUID().toString());
 			statement.setString(2, mute.getStaff());
 			statement.setTimestamp(3, Timestamp.from(mute.getTimestamp()));
