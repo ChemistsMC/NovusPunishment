@@ -232,18 +232,23 @@ public class MySQL {
 	 * @param playerState The {@link PlayerState} to save
 	 */
 	public void savePlayerState(PlayerState playerState) {
+		Timestamp until = null;
+		if (playerState.getUntil() != null) {
+			until = Timestamp.from(playerState.getUntil());
+		}
+
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.savePlayerStmt(prefix))) {
 			// INSERT values
 			statement.setString(1, playerState.getUniqueID().toString());
 			statement.setString(2, playerState.getUserName());
 			statement.setBoolean(3, playerState.isMuted());
-			statement.setTimestamp(4, Timestamp.from(playerState.getUntil()));
+			statement.setTimestamp(4, until);
 
 			// UPDATE values
 			statement.setString(5, playerState.getUserName());
 			statement.setBoolean(6, playerState.isMuted());
-			statement.setTimestamp(7, Timestamp.from(playerState.getUntil()));
+			statement.setTimestamp(7, until);
 
 			statement.executeUpdate();
 		} catch (SQLException ex) {
