@@ -153,17 +153,24 @@ public class MySQL {
 	 * @param mute The {@link Mute} being stored
 	 */
 	public void saveMute(Mute mute) {
+		// Timestamps from `Instant.MAX` cause a data truncation error.
+		// In these cases, set it to `null` instead, which is allowed.
+		Timestamp expires = null;
+		if (!mute.getExpires().equals(Instant.MAX)) {
+			expires = Timestamp.from(mute.getExpires());
+		}
+
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveMuteStmt(prefix))) {
 			statement.setString(1, mute.getPlayerUUID().toString());
 			statement.setString(2, mute.getStaff());
 			statement.setTimestamp(3, Timestamp.from(mute.getTimestamp()));
-			statement.setTimestamp(4, Timestamp.from(mute.getExpires()));
+			statement.setTimestamp(4, expires);
 			statement.setString(5, mute.getReason());
 
 			statement.executeUpdate();
 		} catch (SQLException ex) {
-			ConsoleLogger.severe("Unable to save tempban in database:", ex);
+			ConsoleLogger.severe("Unable to save mute in database:", ex);
 		}
 	}
 
