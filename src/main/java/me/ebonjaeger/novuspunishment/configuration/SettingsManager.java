@@ -14,7 +14,8 @@ import java.util.List;
 
 public class SettingsManager extends SettingsManagerImpl {
 
-	private static List<Class<? extends SettingsHolder>> PROPERTY_HOLDERS = Arrays.asList(DatabaseSettings.class);
+	private static List<Class<? extends SettingsHolder>> PROPERTY_HOLDERS =
+			Arrays.asList(DatabaseSettings.class, ActionSettings.class);
 
 	private SettingsManager(YamlFileResource file, ConfigurationData configurationData, MigrationService migrationService) {
 		super(file, configurationData, migrationService);
