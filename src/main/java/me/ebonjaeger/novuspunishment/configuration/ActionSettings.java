@@ -17,5 +17,5 @@ public class ActionSettings implements SettingsHolder {
 
 	@Comment("Commands that the player cannot perform while muted, e.g. msg, tell")
 	public static final Property<List<String>> DISALLOWED_COMMANDS =
-			newListProperty("actions.disallowed-commands-while-muted");
+			newListProperty("actions.disallowed-commands-while-muted", "msg", "tell");
 }

@@ -16,4 +16,6 @@ actions:
   # Set to 0 to disable
   warns-until-kick: 0
   # Commands that the player cannot perform while muted, e.g. msg, tell
-  disallowed-commands-while-muted: []
+  disallowed-commands-while-muted:
+  - 'msg'
+  - 'tell'
