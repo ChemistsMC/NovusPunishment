@@ -58,6 +58,7 @@ public class MuteCommand extends BaseCommand {
 				state.setUntil(null);
 				plugin.sendMessage(sender, Message.UNMUTE_SUCCESS, target.getName());
 				plugin.sendMessage(target, Message.UNMUTE_PLAYER);
+				return;
 			}
 		}
 
