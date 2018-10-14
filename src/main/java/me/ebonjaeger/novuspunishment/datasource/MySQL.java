@@ -23,8 +23,6 @@ import java.util.UUID;
  */
 public class MySQL {
 
-	private NovusPunishment plugin;
-
 	private String hostname;
 	private String port;
 	private String username;
@@ -36,8 +34,6 @@ public class MySQL {
 
 	@Inject
 	MySQL(NovusPunishment plugin, SettingsManager settings) {
-		this.plugin = plugin;
-
 		this.hostname = settings.getProperty(DatabaseSettings.DATABASE_HOSTNAME);
 		this.port = settings.getProperty(DatabaseSettings.DATABASE_PORT);
 		this.username = settings.getProperty(DatabaseSettings.DATABASE_USER);
@@ -137,7 +133,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveWarningStmt(prefix))) {
 			statement.setString(1, warning.getPlayerUUID().toString());
-			statement.setString(2, warning.getStaff().toString());
+			statement.setString(2, warning.getStaff());
 			statement.setTimestamp(3, Timestamp.from(warning.getTimestamp()));
 			statement.setString(4, warning.getReason());
 
@@ -202,7 +198,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveTempbanStmt(prefix))) {
 			statement.setString(1, tempban.getPlayerUUID().toString());
-			statement.setString(2, tempban.getStaff().toString());
+			statement.setString(2, tempban.getStaff());
 			statement.setTimestamp(3, Timestamp.from(tempban.getTimestamp()));
 			statement.setTimestamp(4, Timestamp.from(tempban.getExpires()));
 			statement.setString(5, tempban.getReason());
@@ -222,7 +218,7 @@ public class MySQL {
 		try (Connection conn = getConnection();
 			 PreparedStatement statement = conn.prepareStatement(MySqlStatements.saveBanStmt(prefix))) {
 			statement.setString(1, ban.getPlayerUUID().toString());
-			statement.setString(2, ban.getStaff().toString());
+			statement.setString(2, ban.getStaff());
 			statement.setTimestamp(3, Timestamp.from(ban.getTimestamp()));
 			statement.setString(4, ban.getReason());
 
