@@ -47,9 +47,9 @@ public enum Message {
 	}
 
 	private enum Prefix {
-		INFO(ChatColor.BLUE + "» " + ChatColor.GRAY),
-		SUCCESS(ChatColor.GREEN + "» " + ChatColor.GRAY),
-		ERROR(ChatColor.RED + "» " + ChatColor.GRAY),
+		INFO(ChatColor.BLUE + ">> " + ChatColor.GRAY),
+		SUCCESS(ChatColor.GREEN + ">> " + ChatColor.GRAY),
+		ERROR(ChatColor.RED + ">> " + ChatColor.GRAY),
 		NONE("");
 
 		private String prefix;
