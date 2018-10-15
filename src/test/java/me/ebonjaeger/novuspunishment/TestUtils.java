@@ -1,6 +1,7 @@
 package me.ebonjaeger.novuspunishment;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -44,6 +45,25 @@ public class TestUtils {
 			return new URI(url.toString());
 		} catch (URISyntaxException e) {
 			throw new IllegalStateException("File '" + path + "' cannot be converted to a URI");
+		}
+	}
+
+	/**
+	 * Sets the field of the given class.
+	 *
+	 * @param clazz The class on which the field is declared
+	 * @param fieldName The field name
+	 * @param instance The instance to set the field on (null for static fields)
+	 * @param value The value to set
+	 * @param <T> The instance's type
+	 */
+	public static <T> void setField(Class<? super T> clazz, String fieldName, T instance, Object value) {
+		try {
+			Field field = clazz.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			field.set(instance, value);
+		} catch (NoSuchFieldException | IllegalAccessException ex) {
+			throw new IllegalStateException("Could not set field '" + fieldName + "' on " + instance, ex);
 		}
 	}
 }
