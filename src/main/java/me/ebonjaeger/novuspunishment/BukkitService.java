@@ -19,8 +19,6 @@ public class BukkitService {
 
 	private Permission permission;
 
-	private boolean serverShuttingDown = false;
-
 	@Inject
 	BukkitService(NovusPunishment plugin) {
 		this.plugin = plugin;

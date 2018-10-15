@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BanCommand extends BaseCommand {
 
@@ -50,38 +49,37 @@ public class BanCommand extends BaseCommand {
 		// Because looking up an offline player may result in a blocking request,
 		// we have to somehow check if they have the bypass permission set in an
 		// asynchronous manner
-		AtomicBoolean isExempt = new AtomicBoolean(false);
 		bukkitService.runTaskAsync(() -> {
-			if (bukkitService.hasPermission(player, "newpunish.bypass.ban")) {
-				isExempt.set(true);
-			}
+			boolean exempt = bukkitService.hasPermission(player, "newpunish.bypass.ban");
+
+			bukkitService.runTask(() -> {
+				if (exempt) {
+					plugin.sendMessage(sender, Message.BAN_EXEMPT, player.getName());
+					return;
+				}
+
+				String staff = "console";
+				if (sender instanceof Player) {
+					staff = ((Player) sender).getUniqueId().toString();
+				}
+
+				String _reason = String.join(", ", reason);
+				Instant timestamp = Instant.now();
+				PermanentBan ban = new PermanentBan(player.getUniqueId(), staff, timestamp, _reason);
+
+				bukkitService.runTaskAsync(() -> dataSource.saveBan(ban));
+
+				// Add ban entry and kick from the server if online
+				Bukkit.getBanList(BanList.Type.NAME).addBan(player.getName(), _reason, null, sender.getName());
+				if (player.isOnline()) {
+					player.getPlayer().kickPlayer(Utils.formatBanMessage(ban.getReason()));
+				}
+
+				// Notify players
+				plugin.getServer().getOnlinePlayers().stream()
+						.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.ban"))
+						.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.BAN_NOTIFICATION, player.getName(), ban.getReason()));
+			});
 		});
-
-		if (isExempt.get()) {
-			plugin.sendMessage(sender, Message.BAN_EXEMPT, player.getName());
-			return;
-		}
-
-		String staff = "console";
-		if (sender instanceof Player) {
-			staff = ((Player) sender).getUniqueId().toString();
-		}
-
-		String _reason = String.join(", ", reason);
-		Instant timestamp = Instant.now();
-		PermanentBan ban = new PermanentBan(player.getUniqueId(), staff, timestamp, _reason);
-
-		bukkitService.runTaskAsync(() -> dataSource.saveBan(ban));
-
-		// Add ban entry and kick from the server if online
-		Bukkit.getBanList(BanList.Type.NAME).addBan(player.getName(), _reason, null, sender.getName());
-		if (player.isOnline()) {
-			player.getPlayer().kickPlayer(Utils.formatBanMessage(ban.getReason()));
-		}
-
-		// Notify players
-		plugin.getServer().getOnlinePlayers().stream()
-				.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.ban"))
-				.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.BAN_NOTIFICATION, player.getName(), ban.getReason()));
 	}
 }
