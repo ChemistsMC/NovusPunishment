@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import me.ebonjaeger.novuspunishment.Message;
-import me.ebonjaeger.novuspunishment.NovusPunishment;
+import me.ebonjaeger.novuspunishment.Messenger;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -13,11 +13,11 @@ import javax.inject.Inject;
 
 public class UnbanCommand extends BaseCommand {
 
-	private NovusPunishment plugin;
+	private Messenger messenger;
 
 	@Inject
-	UnbanCommand(NovusPunishment plugin) {
-		this.plugin = plugin;
+	UnbanCommand(Messenger messenger) {
+		this.messenger = messenger;
 	}
 
 	@CommandAlias("unban|pardon")
@@ -27,11 +27,9 @@ public class UnbanCommand extends BaseCommand {
 			Bukkit.getBanList(BanList.Type.NAME).pardon(name);
 
 			// Notify players
-			plugin.getServer().getOnlinePlayers().stream()
-					.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.unban"))
-					.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.PLAYER_UNBANNED, name));
+			messenger.broadcastMessage(Message.PLAYER_UNBANNED, "newpunish.notify.unban", name);
 		} else {
-			plugin.sendMessage(sender, Message.PLAYER_NOT_BANNED, name);
+			messenger.sendMessage(sender, Message.PLAYER_NOT_BANNED, name);
 		}
 	}
 }

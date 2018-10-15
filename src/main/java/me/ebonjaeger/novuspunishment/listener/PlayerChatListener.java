@@ -16,14 +16,14 @@ import java.util.List;
 
 public class PlayerChatListener implements Listener {
 
-	private NovusPunishment plugin;
+	private Messenger messenger;
 	private StateManager stateManager;
 
 	private List<String> disallowedCommands;
 
 	@Inject
-	PlayerChatListener(NovusPunishment plugin, SettingsManager settings, StateManager stateManager) {
-		this.plugin = plugin;
+	PlayerChatListener(Messenger messenger, SettingsManager settings, StateManager stateManager) {
+		this.messenger = messenger;
 		this.stateManager = stateManager;
 
 		this.disallowedCommands = settings.getProperty(ActionSettings.DISALLOWED_COMMANDS);
@@ -44,7 +44,7 @@ public class PlayerChatListener implements Listener {
 
 		if (state.getUntil().isAfter(Instant.now())) {
 			event.setCancelled(true);
-			plugin.sendMessage(player, Message.CHAT_WHILE_MUTED);
+			messenger.sendMessage(player, Message.CHAT_WHILE_MUTED);
 		} else {
 			state.setMuted(false);
 			state.setUntil(null);
@@ -74,7 +74,7 @@ public class PlayerChatListener implements Listener {
 
 		if (state.getUntil().isAfter(Instant.now())) {
 			event.setCancelled(true);
-			plugin.sendMessage(player, Message.CHAT_WHILE_MUTED);
+			messenger.sendMessage(player, Message.CHAT_WHILE_MUTED);
 		} else {
 			state.setMuted(false);
 			state.setUntil(null);

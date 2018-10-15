@@ -5,10 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.contexts.OnlinePlayer;
-import me.ebonjaeger.novuspunishment.BukkitService;
-import me.ebonjaeger.novuspunishment.Message;
-import me.ebonjaeger.novuspunishment.NovusPunishment;
-import me.ebonjaeger.novuspunishment.Utils;
+import me.ebonjaeger.novuspunishment.*;
 import me.ebonjaeger.novuspunishment.action.Kick;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
 import org.bukkit.command.CommandSender;
@@ -19,14 +16,14 @@ import java.time.Instant;
 
 public class KickCommand extends BaseCommand {
 
-	private NovusPunishment plugin;
 	private BukkitService bukkitService;
+	private Messenger messenger;
 	private MySQL dataSource;
 
 	@Inject
-	KickCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource) {
-		this.plugin = plugin;
+	KickCommand(BukkitService bukkitService, Messenger messenger, MySQL dataSource) {
 		this.bukkitService = bukkitService;
+		this.messenger = messenger;
 		this.dataSource = dataSource;
 	}
 
@@ -38,12 +35,12 @@ public class KickCommand extends BaseCommand {
 		String _reason = String.join(", ", reason);
 
 		if (sender.getName().equals(target.getName())) {
-			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
+			messenger.sendMessage(sender, Message.ACTION_AGAINST_SELF);
 			return;
 		}
 
 		if (target.hasPermission("newpunish.bypass.kick")) {
-			plugin.sendMessage(sender, Message.KICK_EXEMPT, target.getName());
+			messenger.sendMessage(sender, Message.KICK_EXEMPT, target.getName());
 			return;
 		}
 
@@ -59,8 +56,6 @@ public class KickCommand extends BaseCommand {
 
 		target.kickPlayer(Utils.formatKickMessage(kick.getReason()));
 
-		plugin.getServer().getOnlinePlayers().stream()
-				.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.kick"))
-				.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.KICK_NOTIFICATION, target.getName(), kick.getReason()));
+		messenger.broadcastMessage(Message.KICK_NOTIFICATION, "newpunish.notify.kick", target.getName(), kick.getReason());
 	}
 }

@@ -4,10 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
-import me.ebonjaeger.novuspunishment.BukkitService;
-import me.ebonjaeger.novuspunishment.Message;
-import me.ebonjaeger.novuspunishment.NovusPunishment;
-import me.ebonjaeger.novuspunishment.Utils;
+import me.ebonjaeger.novuspunishment.*;
 import me.ebonjaeger.novuspunishment.action.PermanentBan;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
 import org.bukkit.BanList;
@@ -21,14 +18,14 @@ import java.time.Instant;
 
 public class BanCommand extends BaseCommand {
 
-	private NovusPunishment plugin;
 	private BukkitService bukkitService;
+	private Messenger messenger;
 	private MySQL dataSource;
 
 	@Inject
-	BanCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource) {
-		this.plugin = plugin;
+	BanCommand(BukkitService bukkitService, Messenger messenger, MySQL dataSource) {
 		this.bukkitService = bukkitService;
+		this.messenger = messenger;
 		this.dataSource = dataSource;
 	}
 
@@ -37,12 +34,12 @@ public class BanCommand extends BaseCommand {
 	@CommandCompletion("@players")
 	public void onCommand(CommandSender sender, OfflinePlayer player, String... reason) {
 		if (Bukkit.getBanList(BanList.Type.NAME).isBanned(player.getName())) {
-			plugin.sendMessage(sender, Message.ALREADY_BANNED, player.getName());
+			messenger.sendMessage(sender, Message.ALREADY_BANNED, player.getName());
 			return;
 		}
 
 		if (sender.getName().equals(player.getName())) {
-			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
+			messenger.sendMessage(sender, Message.ACTION_AGAINST_SELF);
 			return;
 		}
 
@@ -54,7 +51,7 @@ public class BanCommand extends BaseCommand {
 
 			bukkitService.runTask(() -> {
 				if (exempt) {
-					plugin.sendMessage(sender, Message.BAN_EXEMPT, player.getName());
+					messenger.sendMessage(sender, Message.BAN_EXEMPT, player.getName());
 					return;
 				}
 
@@ -76,9 +73,7 @@ public class BanCommand extends BaseCommand {
 				}
 
 				// Notify players
-				plugin.getServer().getOnlinePlayers().stream()
-						.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.ban"))
-						.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.BAN_NOTIFICATION, player.getName(), ban.getReason()));
+				messenger.broadcastMessage(Message.BAN_NOTIFICATION, "newpunish.notify.ban", player.getName(), ban.getReason());
 			});
 		});
 	}

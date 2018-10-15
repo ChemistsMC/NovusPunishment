@@ -10,8 +10,6 @@ import me.ebonjaeger.novuspunishment.listener.PlayerChatListener;
 import me.ebonjaeger.novuspunishment.listener.PlayerLoginListener;
 import me.ebonjaeger.novuspunishment.listener.PlayerLogoutListener;
 import org.bukkit.Server;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -76,27 +74,5 @@ public class NovusPunishment extends JavaPlugin {
 
 	public boolean isShuttingDown() {
 		return isShuttingDown;
-	}
-
-	public void sendMessage(Player player, Message message, String... replacers) {
-		String finalMessage = message.getMessage();
-		if (replacers.length > 0) {
-			for (int i = 0; i < replacers.length; i++) {
-				finalMessage = finalMessage.replace("{" + i + "}", replacers[i]);
-			}
-		}
-
-		player.sendMessage(finalMessage);
-	}
-
-	public void sendMessage(CommandSender sender, Message message, String... replacers) {
-		String finalMessage = message.getMessage();
-		if (replacers.length > 0) {
-			for (int i = 0; i < replacers.length; i++) {
-				finalMessage = finalMessage.replace("{" + i + "}", replacers[i]);
-			}
-		}
-
-		sender.sendMessage(finalMessage);
 	}
 }

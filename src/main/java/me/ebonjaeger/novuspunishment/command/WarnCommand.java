@@ -18,16 +18,16 @@ import java.time.Instant;
 
 public class WarnCommand extends BaseCommand {
 
-	private NovusPunishment plugin;
 	private BukkitService bukkitService;
+	private Messenger messenger;
 	private MySQL dataSource;
 	private SettingsManager settings;
 	private StateManager stateManager;
 
 	@Inject
-	WarnCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, SettingsManager settings, StateManager stateManager) {
-		this.plugin = plugin;
+	WarnCommand(BukkitService bukkitService, Messenger messenger, MySQL dataSource, SettingsManager settings, StateManager stateManager) {
 		this.bukkitService = bukkitService;
+		this.messenger = messenger;
 		this.dataSource = dataSource;
 		this.settings = settings;
 		this.stateManager = stateManager;
@@ -41,12 +41,12 @@ public class WarnCommand extends BaseCommand {
 		String _reason = String.join(", ", reason);
 
 		if (sender.getName().equals(target.getName())) {
-			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
+			messenger.sendMessage(sender, Message.ACTION_AGAINST_SELF);
 			return;
 		}
 
 		if (target.hasPermission("newpunish.bypass.warn")) {
-			plugin.sendMessage(sender, Message.WARN_EXEMPT, target.getName());
+			messenger.sendMessage(sender, Message.WARN_EXEMPT, target.getName());
 			return;
 		}
 
@@ -68,11 +68,10 @@ public class WarnCommand extends BaseCommand {
 			// TODO: Make it clear they were warned too many times
 			target.kickPlayer(Utils.formatKickMessage(warning.getReason()));
 		} else {
-			plugin.sendMessage(target, Message.WARN_PLAYER, warning.getReason());
+			messenger.sendMessage(target, Message.WARN_PLAYER, warning.getReason());
 		}
 
-		plugin.getServer().getOnlinePlayers().stream()
-				.filter(onlinePlayer -> onlinePlayer.hasPermission("newpunish.notify.warn"))
-				.forEach(onlinePlayer -> plugin.sendMessage(onlinePlayer, Message.WARN_NOTIFICATION, target.getName(), warning.getReason()));
+		messenger.broadcastMessageExcept(Message.WARN_NOTIFICATION, target, "newpunish.notify.warn",
+				target.getName(), warning.getReason());
 	}
 }

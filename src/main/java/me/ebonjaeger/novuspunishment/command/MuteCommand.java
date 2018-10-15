@@ -17,15 +17,15 @@ import java.time.Instant;
 
 public class MuteCommand extends BaseCommand {
 
-	private NovusPunishment plugin;
 	private BukkitService bukkitService;
+	private Messenger messenger;
 	private MySQL dataSource;
 	private StateManager stateManager;
 
 	@Inject
-	MuteCommand(NovusPunishment plugin, BukkitService bukkitService, MySQL dataSource, StateManager stateManager) {
-		this.plugin = plugin;
+	MuteCommand(BukkitService bukkitService, Messenger messenger, MySQL dataSource, StateManager stateManager) {
 		this.bukkitService = bukkitService;
+		this.messenger = messenger;
 		this.dataSource = dataSource;
 		this.stateManager = stateManager;
 	}
@@ -41,12 +41,12 @@ public class MuteCommand extends BaseCommand {
 		}
 
 		if (sender.getName().equals(target.getName())) {
-			plugin.sendMessage(sender, Message.ACTION_AGAINST_SELF);
+			messenger.sendMessage(sender, Message.ACTION_AGAINST_SELF);
 			return;
 		}
 
 		if (target.hasPermission("newpunish.bypass.mute")) {
-			plugin.sendMessage(sender, Message.MUTE_EXEMPT, target.getName());
+			messenger.sendMessage(sender, Message.MUTE_EXEMPT, target.getName());
 			return;
 		}
 
@@ -56,8 +56,8 @@ public class MuteCommand extends BaseCommand {
 			if (state.isMuted()) {
 				state.setMuted(false);
 				state.setUntil(null);
-				plugin.sendMessage(sender, Message.UNMUTE_SUCCESS, target.getName());
-				plugin.sendMessage(target, Message.UNMUTE_PLAYER);
+				messenger.sendMessage(sender, Message.UNMUTE_SUCCESS, target.getName());
+				messenger.sendMessage(target, Message.UNMUTE_PLAYER);
 				return;
 			}
 		}
@@ -75,7 +75,7 @@ public class MuteCommand extends BaseCommand {
 			if (Utils.matchesDurationPattern(duration)) {
 				expires = Utils.addDuration(duration, timestamp);
 			} else {
-				plugin.sendMessage(sender, Message.INVALID_DURATION, duration);
+				messenger.sendMessage(sender, Message.INVALID_DURATION, duration);
 				return;
 			}
 		}
@@ -99,11 +99,9 @@ public class MuteCommand extends BaseCommand {
 			duration = Utils.formatTime(mute.getExpires());
 		}
 
-		plugin.sendMessage(target, Message.MUTE_PLAYER, duration, mute.getReason());
+		messenger.sendMessage(target, Message.MUTE_PLAYER, duration, mute.getReason());
 
-		plugin.getServer().getOnlinePlayers().stream()
-				.filter(player -> !player.equals(target))
-				.filter(player -> player.hasPermission("newpunish.notify.mute"))
-				.forEach(player -> plugin.sendMessage(player, Message.MUTE_NOTIFICATION, target.getName(), duration, mute.getReason()));
+		messenger.broadcastMessageExcept(Message.MUTE_NOTIFICATION, target, "newpunish.notify.mute",
+				target.getName(), duration, mute.getReason());
 	}
 }
