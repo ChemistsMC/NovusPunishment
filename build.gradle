@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id 'jacoco'
 }
 
 group 'me.ebonjaeger'
@@ -61,6 +62,10 @@ compileJava {
     options.compilerArgs += ["-parameters"]
     options.fork = true
     options.forkOptions.executable = 'javac'
+}
+
+jacoco {
+    toolVersion = "0.8.2"
 }
 
 shadowJar.relocate('ch.jalu', 'me.ebonjaeger.novuspunishment.libs')

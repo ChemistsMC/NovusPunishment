@@ -3,6 +3,7 @@ Player punishment plugin for Spigot
 
 # Build Status
 [![Build Status](https://ci.codemc.org/view/Author/job/EbonJaeger/job/NovusPunishment/badge/icon)](https://ci.codemc.org/view/Author/job/EbonJaeger/job/NovusPunishment/)
+[![Coverage Status](https://coveralls.io/repos/github/EbonJaeger/NovusPunishment/badge.svg?branch=master)](https://coveralls.io/github/EbonJaeger/NovusPunishment?branch=master)
 
 # Description
 This plugin provides Spigot server moderators the ability to take various actions against misbehaving players. All actions taken are logged to a MySQL database in order to generate reports. The plugin only targets 1.13, but it may work on 1.12. We'll see.
