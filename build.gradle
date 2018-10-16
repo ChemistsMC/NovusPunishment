@@ -27,6 +27,10 @@ repositories {
     maven {
         url = 'http://nexus.hc.to/content/repositories/pub_releases'
     }
+
+    maven {
+        url = 'https://jitpack.io'
+    }
 }
 
 dependencies {
@@ -36,12 +40,13 @@ dependencies {
     testCompile(group: 'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0') {
         exclude group: 'junit'
     }
-    testCompile(group: 'org.mockito', name: 'mockito-core', version: '2.23.0') {
+    testCompile(group: 'org.mockito', name: 'mockito-core', version: '2.8.47') {
         exclude group: 'junit'
     }
     testCompile(group: 'org.spigotmc', name: 'spigot-api', version: bukkitVersion) {
         exclude group: 'junit'
     }
+    testCompile 'com.github.seeseemelk:MockBukkit:v1.13-SNAPSHOT'
 
     compileOnly ("org.spigotmc:spigot-api:" + bukkitVersion) {
         exclude group: 'junit'
