@@ -1,5 +1,6 @@
 package me.ebonjaeger.novuspunishment;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -75,5 +76,18 @@ public class MessengerTest {
 		verify(player1).sendMessage(anyString());
 		verify(player2, never()).sendMessage(anyString());
 		verify(plugin.getServer().getConsoleSender()).sendMessage(anyString());
+	}
+
+	@Test
+	public void verifyCorrectReplacement() {
+		// given
+		Player player = mock(Player.class);
+
+		// when
+		messenger.sendMessage(player, Message.MUTE_PLAYER, "forever", "testing");
+
+		// then
+		String expected = ChatColor.RED + "You have been muted until " + ChatColor.WHITE + "forever " + ChatColor.GRAY + "for: " + ChatColor.WHITE + "testing";
+		verify(player).sendMessage(expected);
 	}
 }
