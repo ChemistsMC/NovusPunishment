@@ -65,6 +65,7 @@ public class TempbanCommand extends BaseCommand {
 
 		Instant timestamp = Instant.now();
 		Instant expires = Utils.addDuration(duration, timestamp);
+		Duration until = Duration.between(timestamp, expires);
 
 		// Save the tempban to the database
 		TemporaryBan tempban = new TemporaryBan(target.getUniqueId(), staff, timestamp, expires, _reason);
@@ -72,9 +73,10 @@ public class TempbanCommand extends BaseCommand {
 
 		// Add the entry to the server's banlist
 		Bukkit.getBanList(BanList.Type.NAME).addBan(target.getName(), tempban.getReason(), Date.from(expires), sender.getName());
-		target.kickPlayer(Utils.formatTempbanMessage(tempban.getReason(), Duration.between(timestamp, expires)));
+		target.kickPlayer(Utils.formatTempbanMessage(tempban.getReason(), until));
 
 		// Notify players
-		messenger.broadcastMessage(Message.TEMPBAN_NOTIFICATION, "newpunish.notify.tempban", target.getName(), tempban.getReason());
+		messenger.broadcastMessage(Message.TEMPBAN_NOTIFICATION, "newpunish.notify.tempban",
+				target.getName(), Utils.formatDuration(until), tempban.getReason());
 	}
 }

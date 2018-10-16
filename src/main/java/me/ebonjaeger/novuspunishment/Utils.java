@@ -83,7 +83,13 @@ public class Utils {
 		return FORMATTER.format(time);
 	}
 
-	private static String formatDuration(Duration duration) {
+	/**
+	 * Format a duration of time using the default system locale.
+	 *
+	 * @param duration The {@link Duration} to format
+	 * @return The duration formatted as a readable String
+	 */
+	public static String formatDuration(Duration duration) {
 		long s = duration.getSeconds();
 
 		return String.format("%d Days, %d Hours, %02d Minutes and %02d Seconds", s/86400, s/3600, (s%3600)/60, (s%60));
