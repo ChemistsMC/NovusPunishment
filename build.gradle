@@ -68,6 +68,13 @@ jacoco {
     toolVersion = "0.8.2"
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
 shadowJar.relocate('ch.jalu', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('org.slf4j', 'me.ebonjaeger.novuspunishment.libs')
