@@ -21,8 +21,8 @@ public enum Message {
 	WARN_PLAYER(Prefix.NONE, ChatColor.RED + "You have been warned for: " + ChatColor.WHITE + "{0}"),
 	WARN_NOTIFICATION(Prefix.INFO, "{0} has been warned for: " + ChatColor.WHITE + "{1}"),
 
-	TEMPBAN_NOTIFICATION(Prefix.INFO, "[0} has been banned from the server for " + ChatColor.WHITE + "{1}" +
-			ChatColor.GRAY + " because: " + ChatColor.WHITE + "{2}"),
+	TEMPBAN_NOTIFICATION(Prefix.INFO, "[0} has been banned from the server for " + ChatColor.WHITE + "{1} " +
+			ChatColor.GRAY + "because: " + ChatColor.WHITE + "{2}"),
 
 	ALREADY_BANNED(Prefix.ERROR, "{0} is already banned!"),
 	BAN_EXEMPT(Prefix.ERROR, "{0} cannot be banned from the server!"),
@@ -46,7 +46,11 @@ public enum Message {
 		return prefix.getPrefix() + message;
 	}
 
-	private enum Prefix {
+	Prefix getPrefix() {
+		return prefix;
+	}
+
+	enum Prefix {
 		INFO(ChatColor.BLUE + ">> " + ChatColor.GRAY),
 		SUCCESS(ChatColor.GREEN + ">> " + ChatColor.GRAY),
 		ERROR(ChatColor.RED + ">> " + ChatColor.GRAY),
