@@ -82,12 +82,7 @@ jacocoTestReport {
 
 shadowJar.relocate('ch.jalu', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
-shadowJar.relocate('org.slf4j', 'me.ebonjaeger.novuspunishment.libs')
-shadowJar.relocate('co.aikar', 'me.ebonjaeger.novuspunishment.libs')
-shadowJar.relocate('net.jodah', 'me.ebonjaeger.novuspunishment.libs')
-shadowJar.relocate('org.intellij', 'me.ebonjaeger.novuspunishment.libs')
-shadowJar.relocate('org.jetbrains', 'me.ebonjaeger.novuspunishment.libs')
-shadowJar.relocate('org.yaml', 'me.ebonjaeger.novuspunishment.libs')
+shadowJar.relocate('co.aikar.commands', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.archiveName = rootProject.name + '-' + rootProject.version + '.jar'
 
 compileJava.dependsOn clean
