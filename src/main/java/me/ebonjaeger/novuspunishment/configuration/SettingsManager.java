@@ -14,18 +14,18 @@ import java.util.List;
 
 public class SettingsManager extends SettingsManagerImpl {
 
-	private static List<Class<? extends SettingsHolder>> PROPERTY_HOLDERS =
-			Arrays.asList(DatabaseSettings.class, ActionSettings.class);
+    private static List<Class<? extends SettingsHolder>> PROPERTY_HOLDERS =
+        Arrays.asList(DatabaseSettings.class, ActionSettings.class);
 
-	private SettingsManager(YamlFileResource file, ConfigurationData configurationData, MigrationService migrationService) {
-		super(file, configurationData, migrationService);
-	}
+    private SettingsManager(YamlFileResource file, ConfigurationData configurationData, MigrationService migrationService) {
+        super(file, configurationData, migrationService);
+    }
 
-	public static SettingsManager create(File file) {
-		YamlFileResource resource = new YamlFileResource(file);
-		ConfigurationData configurationData = ConfigurationDataBuilder.createConfiguration(PROPERTY_HOLDERS);
-		MigrationService migrater = new PlainMigrationService();
+    public static SettingsManager create(File file) {
+        YamlFileResource resource = new YamlFileResource(file);
+        ConfigurationData configurationData = ConfigurationDataBuilder.createConfiguration(PROPERTY_HOLDERS);
+        MigrationService migrater = new PlainMigrationService();
 
-		return new SettingsManager(resource, configurationData, migrater);
-	}
+        return new SettingsManager(resource, configurationData, migrater);
+    }
 }

@@ -18,61 +18,61 @@ import java.nio.file.Files;
 
 public class NovusPunishment extends JavaPlugin {
 
-	private MySQL dataSource;
-	private StateManager stateManager;
+    private MySQL dataSource;
+    private StateManager stateManager;
 
-	private boolean isShuttingDown = false;
+    private boolean isShuttingDown = false;
 
-	@Override
-	public void onEnable() {
-		// Create default config file if it does not exist
-		if (!Files.exists(new File(getDataFolder(), "config.yml").toPath())) {
-			saveResource("config.yml", false);
-		}
+    @Override
+    public void onEnable() {
+        // Create default config file if it does not exist
+        if (!Files.exists(new File(getDataFolder(), "config.yml").toPath())) {
+            saveResource("config.yml", false);
+        }
 
-		ConsoleLogger.setLogger(getLogger());
+        ConsoleLogger.setLogger(getLogger());
 
-		// Injector
-		Injector injector = new InjectorBuilder().addDefaultHandlers("me.ebonjaeger.novuspunishment").create();
-		injector.register(NovusPunishment.class, this);
-		injector.register(Server.class, getServer());
-		injector.register(PluginManager.class, getServer().getPluginManager());
+        // Injector
+        Injector injector = new InjectorBuilder().addDefaultHandlers("me.ebonjaeger.novuspunishment").create();
+        injector.register(NovusPunishment.class, this);
+        injector.register(Server.class, getServer());
+        injector.register(PluginManager.class, getServer().getPluginManager());
 
-		SettingsManager settingsManager = SettingsManager.create(new File(getDataFolder(), "config.yml"));
-		injector.register(SettingsManager.class, settingsManager);
+        SettingsManager settingsManager = SettingsManager.create(new File(getDataFolder(), "config.yml"));
+        injector.register(SettingsManager.class, settingsManager);
 
-		this.dataSource = injector.getSingleton(MySQL.class);
-		this.stateManager = injector.getSingleton(StateManager.class);
+        this.dataSource = injector.getSingleton(MySQL.class);
+        this.stateManager = injector.getSingleton(StateManager.class);
 
-		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLoginListener.class), this);
-		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLogoutListener.class), this);
-		getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerChatListener.class), this);
+        getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLoginListener.class), this);
+        getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerLogoutListener.class), this);
+        getServer().getPluginManager().registerEvents(injector.getSingleton(PlayerChatListener.class), this);
 
-		registerCommands(injector);
-	}
+        registerCommands(injector);
+    }
 
-	@Override
-	public void onDisable() {
-		getServer().getScheduler().cancelTasks(this);
-		this.isShuttingDown = true;
+    @Override
+    public void onDisable() {
+        getServer().getScheduler().cancelTasks(this);
+        this.isShuttingDown = true;
 
-		stateManager.flushStates();
+        stateManager.flushStates();
 
-		dataSource.close();
-	}
+        dataSource.close();
+    }
 
-	private void registerCommands(Injector injector) {
-		PaperCommandManager commandManager = new PaperCommandManager(this);
+    private void registerCommands(Injector injector) {
+        PaperCommandManager commandManager = new PaperCommandManager(this);
 
-		commandManager.registerCommand(injector.getSingleton(MuteCommand.class));
-		commandManager.registerCommand(injector.getSingleton(WarnCommand.class));
-		commandManager.registerCommand(injector.getSingleton(KickCommand.class));
-		commandManager.registerCommand(injector.getSingleton(TempbanCommand.class));
-		commandManager.registerCommand(injector.getSingleton(BanCommand.class));
-		commandManager.registerCommand(injector.getSingleton(UnbanCommand.class));
-	}
+        commandManager.registerCommand(injector.getSingleton(MuteCommand.class));
+        commandManager.registerCommand(injector.getSingleton(WarnCommand.class));
+        commandManager.registerCommand(injector.getSingleton(KickCommand.class));
+        commandManager.registerCommand(injector.getSingleton(TempbanCommand.class));
+        commandManager.registerCommand(injector.getSingleton(BanCommand.class));
+        commandManager.registerCommand(injector.getSingleton(UnbanCommand.class));
+    }
 
-	public boolean isShuttingDown() {
-		return isShuttingDown;
-	}
+    public boolean isShuttingDown() {
+        return isShuttingDown;
+    }
 }

@@ -16,68 +16,67 @@ import java.util.List;
 
 public class PlayerChatListener implements Listener {
 
-	private Messenger messenger;
-	private StateManager stateManager;
+    private Messenger messenger;
+    private StateManager stateManager;
 
-	private List<String> disallowedCommands;
+    private List<String> disallowedCommands;
 
-	@Inject
-	PlayerChatListener(Messenger messenger, SettingsManager settings, StateManager stateManager) {
-		this.messenger = messenger;
-		this.stateManager = stateManager;
+    @Inject PlayerChatListener(Messenger messenger, SettingsManager settings, StateManager stateManager) {
+        this.messenger = messenger;
+        this.stateManager = stateManager;
 
-		this.disallowedCommands = settings.getProperty(ActionSettings.DISALLOWED_COMMANDS);
-	}
+        this.disallowedCommands = settings.getProperty(ActionSettings.DISALLOWED_COMMANDS);
+    }
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
 
-		Player player = event.getPlayer();
-		// Check if the player is currently muted
-		PlayerState state = stateManager.getPlayerState(player.getUniqueId());
-		if (state == null || !state.isMuted()) {
-			return;
-		}
+        Player player = event.getPlayer();
+        // Check if the player is currently muted
+        PlayerState state = stateManager.getPlayerState(player.getUniqueId());
+        if (state == null || !state.isMuted()) {
+            return;
+        }
 
-		if (state.getUntil().isAfter(Instant.now())) {
-			event.setCancelled(true);
-			messenger.sendMessage(player, Message.CHAT_WHILE_MUTED);
-		} else {
-			state.setMuted(false);
-			state.setUntil(null);
-		}
-	}
+        if (state.getUntil().isAfter(Instant.now())) {
+            event.setCancelled(true);
+            messenger.sendMessage(player, Message.CHAT_WHILE_MUTED);
+        } else {
+            state.setMuted(false);
+            state.setUntil(null);
+        }
+    }
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
 
-		// Get the actual command; we don't care about any command arguments
-		String command = event.getMessage().substring(1).split(" ")[0];
+        // Get the actual command; we don't care about any command arguments
+        String command = event.getMessage().substring(1).split(" ")[0];
 
-		// If the command is not in the configured list of disallowed commands, exit
-		if (!disallowedCommands.contains(command)) {
-			return;
-		}
+        // If the command is not in the configured list of disallowed commands, exit
+        if (!disallowedCommands.contains(command)) {
+            return;
+        }
 
-		Player player = event.getPlayer();
-		PlayerState state = stateManager.getPlayerState(player.getUniqueId());
+        Player player = event.getPlayer();
+        PlayerState state = stateManager.getPlayerState(player.getUniqueId());
 
-		if (state == null || !state.isMuted()) {
-			return;
-		}
+        if (state == null || !state.isMuted()) {
+            return;
+        }
 
-		if (state.getUntil().isAfter(Instant.now())) {
-			event.setCancelled(true);
-			messenger.sendMessage(player, Message.CHAT_WHILE_MUTED);
-		} else {
-			state.setMuted(false);
-			state.setUntil(null);
-		}
-	}
+        if (state.getUntil().isAfter(Instant.now())) {
+            event.setCancelled(true);
+            messenger.sendMessage(player, Message.CHAT_WHILE_MUTED);
+        } else {
+            state.setMuted(false);
+            state.setUntil(null);
+        }
+    }
 }

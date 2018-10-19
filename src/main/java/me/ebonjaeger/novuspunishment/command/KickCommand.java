@@ -16,46 +16,45 @@ import java.time.Instant;
 
 public class KickCommand extends BaseCommand {
 
-	private BukkitService bukkitService;
-	private Messenger messenger;
-	private MySQL dataSource;
+    private BukkitService bukkitService;
+    private Messenger messenger;
+    private MySQL dataSource;
 
-	@Inject
-	KickCommand(BukkitService bukkitService, Messenger messenger, MySQL dataSource) {
-		this.bukkitService = bukkitService;
-		this.messenger = messenger;
-		this.dataSource = dataSource;
-	}
+    @Inject KickCommand(BukkitService bukkitService, Messenger messenger, MySQL dataSource) {
+        this.bukkitService = bukkitService;
+        this.messenger = messenger;
+        this.dataSource = dataSource;
+    }
 
-	@CommandAlias("kick")
-	@CommandPermission("newpunish.command.kick")
-	@CommandCompletion("@players")
-	public void onCommand(CommandSender sender, OnlinePlayer player, String[] reason) {
-		Player target = player.getPlayer();
-		String _reason = String.join(", ", reason);
+    @CommandAlias("kick")
+    @CommandPermission("newpunish.command.kick")
+    @CommandCompletion("@players")
+    public void onCommand(CommandSender sender, OnlinePlayer player, String[] reason) {
+        Player target = player.getPlayer();
+        String _reason = String.join(", ", reason);
 
-		if (sender.getName().equals(target.getName())) {
-			messenger.sendMessage(sender, Message.ACTION_AGAINST_SELF);
-			return;
-		}
+        if (sender.getName().equals(target.getName())) {
+            messenger.sendMessage(sender, Message.ACTION_AGAINST_SELF);
+            return;
+        }
 
-		if (target.hasPermission("newpunish.bypass.kick")) {
-			messenger.sendMessage(sender, Message.KICK_EXEMPT, target.getName());
-			return;
-		}
+        if (target.hasPermission("newpunish.bypass.kick")) {
+            messenger.sendMessage(sender, Message.KICK_EXEMPT, target.getName());
+            return;
+        }
 
-		String staff = "console";
-		if (sender instanceof Player) {
-			staff = ((Player) sender).getUniqueId().toString();
-		}
+        String staff = "console";
+        if (sender instanceof Player) {
+            staff = ((Player) sender).getUniqueId().toString();
+        }
 
-		Instant timestamp = Instant.now();
-		Kick kick = new Kick(target.getUniqueId(), staff, timestamp, _reason);
+        Instant timestamp = Instant.now();
+        Kick kick = new Kick(target.getUniqueId(), staff, timestamp, _reason);
 
-		bukkitService.runTaskAsync(() -> dataSource.saveKick(kick));
+        bukkitService.runTaskAsync(() -> dataSource.saveKick(kick));
 
-		target.kickPlayer(Utils.formatKickMessage(kick.getReason()));
+        target.kickPlayer(Utils.formatKickMessage(kick.getReason()));
 
-		messenger.broadcastMessage(Message.KICK_NOTIFICATION, "newpunish.notify.kick", target.getName(), kick.getReason());
-	}
+        messenger.broadcastMessage(Message.KICK_NOTIFICATION, "newpunish.notify.kick", target.getName(), kick.getReason());
+    }
 }

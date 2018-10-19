@@ -26,91 +26,91 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class KickCommandTest {
 
-	@InjectMocks
-	private KickCommand kickCommand;
+    @InjectMocks
+    private KickCommand kickCommand;
 
-	@Mock
-	private BukkitService bukkitService;
+    @Mock
+    private BukkitService bukkitService;
 
-	@Mock
-	private Messenger messenger;
+    @Mock
+    private Messenger messenger;
 
-	@Mock
-	private MySQL dataSource;
+    @Mock
+    private MySQL dataSource;
 
-	@Test
-	public void senderSameAsTarget() {
-		// given
-		Player sender = mock(Player.class);
-		given(sender.getName()).willReturn("Bob");
-		OnlinePlayer player = new OnlinePlayer(sender);
+    @Test
+    public void senderSameAsTarget() {
+        // given
+        Player sender = mock(Player.class);
+        given(sender.getName()).willReturn("Bob");
+        OnlinePlayer player = new OnlinePlayer(sender);
 
-		// when
-		kickCommand.onCommand(sender, player, new String[]{"test"});
+        // when
+        kickCommand.onCommand(sender, player, new String[]{"test"});
 
-		// then
-		verify(messenger).sendMessage(sender, Message.ACTION_AGAINST_SELF);
-		verifyZeroInteractions(bukkitService);
-		verifyZeroInteractions(dataSource);
-	}
+        // then
+        verify(messenger).sendMessage(sender, Message.ACTION_AGAINST_SELF);
+        verifyZeroInteractions(bukkitService);
+        verifyZeroInteractions(dataSource);
+    }
 
-	@Test
-	public void targetIsExempt() {
-		// given
-		Player sender = mock(Player.class);
-		Player target = mock(Player.class);
-		given(sender.getName()).willReturn("Bob");
-		given(target.getName()).willReturn("Allen");
-		given(target.hasPermission("newpunish.bypass.kick")).willReturn(true);
-		OnlinePlayer player = new OnlinePlayer(target);
+    @Test
+    public void targetIsExempt() {
+        // given
+        Player sender = mock(Player.class);
+        Player target = mock(Player.class);
+        given(sender.getName()).willReturn("Bob");
+        given(target.getName()).willReturn("Allen");
+        given(target.hasPermission("newpunish.bypass.kick")).willReturn(true);
+        OnlinePlayer player = new OnlinePlayer(target);
 
-		// when
-		kickCommand.onCommand(sender, player, new String[]{"test"});
+        // when
+        kickCommand.onCommand(sender, player, new String[]{"test"});
 
-		// then
-		verify(messenger).sendMessage(sender, Message.KICK_EXEMPT, target.getName());
-		verifyZeroInteractions(bukkitService);
-		verifyZeroInteractions(dataSource);
-	}
+        // then
+        verify(messenger).sendMessage(sender, Message.KICK_EXEMPT, target.getName());
+        verifyZeroInteractions(bukkitService);
+        verifyZeroInteractions(dataSource);
+    }
 
-	@Test
-	public void successfulKickFromPlayer() {
-		// given
-		Player sender = mock(Player.class);
-		Player target = mock(Player.class);
-		given(sender.getName()).willReturn("Bob");
-		given(sender.getUniqueId()).willReturn(UUID.randomUUID());
-		given(target.getName()).willReturn("Allen");
-		given(target.getUniqueId()).willReturn(UUID.randomUUID());
-		given(target.hasPermission("newpunish.bypass.kick")).willReturn(false);
-		OnlinePlayer player = new OnlinePlayer(target);
+    @Test
+    public void successfulKickFromPlayer() {
+        // given
+        Player sender = mock(Player.class);
+        Player target = mock(Player.class);
+        given(sender.getName()).willReturn("Bob");
+        given(sender.getUniqueId()).willReturn(UUID.randomUUID());
+        given(target.getName()).willReturn("Allen");
+        given(target.getUniqueId()).willReturn(UUID.randomUUID());
+        given(target.hasPermission("newpunish.bypass.kick")).willReturn(false);
+        OnlinePlayer player = new OnlinePlayer(target);
 
-		// when
-		kickCommand.onCommand(sender, player, new String[]{"test"});
+        // when
+        kickCommand.onCommand(sender, player, new String[]{"test"});
 
-		// then
-		verify(bukkitService).runTaskAsync(any());
-		verify(target).kickPlayer(anyString());
-		verify(messenger).broadcastMessage(Message.KICK_NOTIFICATION, "newpunish.notify.kick", "Allen", "test");
-	}
+        // then
+        verify(bukkitService).runTaskAsync(any());
+        verify(target).kickPlayer(anyString());
+        verify(messenger).broadcastMessage(Message.KICK_NOTIFICATION, "newpunish.notify.kick", "Allen", "test");
+    }
 
-	@Test
-	public void successfulKickFromConsole() {
-		// given
-		CommandSender sender = mock(ConsoleCommandSender.class);
-		Player target = mock(Player.class);
-		given(sender.getName()).willReturn("CONSOLE");
-		given(target.getName()).willReturn("Allen");
-		given(target.getUniqueId()).willReturn(UUID.randomUUID());
-		given(target.hasPermission("newpunish.bypass.kick")).willReturn(false);
-		OnlinePlayer player = new OnlinePlayer(target);
+    @Test
+    public void successfulKickFromConsole() {
+        // given
+        CommandSender sender = mock(ConsoleCommandSender.class);
+        Player target = mock(Player.class);
+        given(sender.getName()).willReturn("CONSOLE");
+        given(target.getName()).willReturn("Allen");
+        given(target.getUniqueId()).willReturn(UUID.randomUUID());
+        given(target.hasPermission("newpunish.bypass.kick")).willReturn(false);
+        OnlinePlayer player = new OnlinePlayer(target);
 
-		// when
-		kickCommand.onCommand(sender, player, new String[]{"test"});
+        // when
+        kickCommand.onCommand(sender, player, new String[]{"test"});
 
-		// then
-		verify(bukkitService).runTaskAsync(any());
-		verify(target).kickPlayer(anyString());
-		verify(messenger).broadcastMessage(Message.KICK_NOTIFICATION, "newpunish.notify.kick", "Allen", "test");
-	}
+        // then
+        verify(bukkitService).runTaskAsync(any());
+        verify(target).kickPlayer(anyString());
+        verify(messenger).broadcastMessage(Message.KICK_NOTIFICATION, "newpunish.notify.kick", "Allen", "test");
+    }
 }

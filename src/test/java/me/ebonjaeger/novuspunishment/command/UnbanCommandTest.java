@@ -29,51 +29,51 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class UnbanCommandTest {
 
-	@InjectMocks
-	private UnbanCommand unbanCommand;
+    @InjectMocks
+    private UnbanCommand unbanCommand;
 
-	@Mock
-	private Messenger messenger;
+    @Mock
+    private Messenger messenger;
 
-	private ServerMock server;
+    private ServerMock server;
 
-	@Before
-	public void setup() {
-		server = MockBukkit.mock();
-		NovusPunishment plugin = mock(NovusPunishment.class);
-		setField(Bukkit.class, "server", null, server);
-	}
+    @Before
+    public void setup() {
+        server = MockBukkit.mock();
+        NovusPunishment plugin = mock(NovusPunishment.class);
+        setField(Bukkit.class, "server", null, server);
+    }
 
-	@After
-	public void destroy() {
-		MockBukkit.unload();
-	}
+    @After
+    public void destroy() {
+        MockBukkit.unload();
+    }
 
-	@Test
-	public void unbanPlayer() {
-		// given
-		CommandSender sender = mock(Player.class);
-		String target = "Allen";
-		server.getBanList(BanList.Type.NAME).addBan(target, "test", null, "Tester");
+    @Test
+    public void unbanPlayer() {
+        // given
+        CommandSender sender = mock(Player.class);
+        String target = "Allen";
+        server.getBanList(BanList.Type.NAME).addBan(target, "test", null, "Tester");
 
-		// when
-		unbanCommand.onCommand(sender, target);
+        // when
+        unbanCommand.onCommand(sender, target);
 
-		// then
-		assertThat(server.getBanList(BanList.Type.NAME).isBanned(target), equalTo(false));
-		verify(messenger).broadcastMessage(Message.PLAYER_UNBANNED, "newpunish.notify.unban", "Allen");
-	}
+        // then
+        assertThat(server.getBanList(BanList.Type.NAME).isBanned(target), equalTo(false));
+        verify(messenger).broadcastMessage(Message.PLAYER_UNBANNED, "newpunish.notify.unban", "Allen");
+    }
 
-	@Test
-	public void playerNotBanned() {
-		// given
-		CommandSender sender = mock(Player.class);
-		String target = "Allen";
+    @Test
+    public void playerNotBanned() {
+        // given
+        CommandSender sender = mock(Player.class);
+        String target = "Allen";
 
-		// when
-		unbanCommand.onCommand(sender, target);
+        // when
+        unbanCommand.onCommand(sender, target);
 
-		// then
-		verify(messenger).sendMessage(sender, Message.PLAYER_NOT_BANNED, "Allen");
-	}
+        // then
+        verify(messenger).sendMessage(sender, Message.PLAYER_NOT_BANNED, "Allen");
+    }
 }
