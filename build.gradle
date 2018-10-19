@@ -85,6 +85,8 @@ shadowJar.relocate('com.zaxxer', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.relocate('co.aikar.commands', 'me.ebonjaeger.novuspunishment.libs')
 shadowJar.archiveName = rootProject.name + '-' + rootProject.version + '.jar'
 
+libsDirName = 'jar'
+
 compileJava.dependsOn clean
 build.dependsOn test
 build.dependsOn shadowJar
