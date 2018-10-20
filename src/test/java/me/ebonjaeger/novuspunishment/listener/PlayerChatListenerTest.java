@@ -54,6 +54,28 @@ public class PlayerChatListenerTest {
     }
 
     @Test
+    public void chatEventCancelled() {
+        // given
+        Player player = mock(Player.class);
+        String message = "hey, that person who unmuted me was really nice!";
+
+        Player extra = mock(Player.class);
+        Set<Player> onlinePlayers = new HashSet<>();
+        onlinePlayers.add(player);
+        onlinePlayers.add(extra);
+
+        AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, message, onlinePlayers);
+        event.setCancelled(true);
+
+        // when
+        listener.onPlayerAsyncChat(event);
+
+        // then
+        verifyZeroInteractions(messenger);
+        verifyZeroInteractions(stateManager);
+    }
+
+    @Test
     public void chatShouldBeDisallowed() {
         // given
         Player player = mock(Player.class);
@@ -126,6 +148,28 @@ public class PlayerChatListenerTest {
         // then
         assertThat(event.isCancelled(), equalTo(false));
         verifyZeroInteractions(messenger);
+    }
+
+    @Test
+    public void commandEventCancelled() {
+        // given
+        Player player = mock(Player.class);
+        String message = "/msg Bob hey, that person who unmuted me was really nice!";
+
+        Player extra = mock(Player.class);
+        Set<Player> onlinePlayers = new HashSet<>();
+        onlinePlayers.add(player);
+        onlinePlayers.add(extra);
+
+        PlayerCommandPreprocessEvent event = new PlayerCommandPreprocessEvent(player, message, onlinePlayers);
+        event.setCancelled(true);
+
+        // when
+        listener.onPlayerCommand(event);
+
+        // then
+        verifyZeroInteractions(messenger);
+        verifyZeroInteractions(stateManager);
     }
 
     @Test
