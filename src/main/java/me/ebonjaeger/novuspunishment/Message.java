@@ -34,8 +34,10 @@ public enum Message {
     PLAYER_UNBANNED(Prefix.INFO, "{0} has been unbanned from the server!"),
     PLAYER_NOT_BANNED(Prefix.ERROR, "{0} is not currently banned!"),
 
+    ERROR_GETTING_COUNT(Prefix.ERROR, "There was an error getting the incident count!"),
     UNKNOWN_PLAYER(Prefix.ERROR, "Player '{0}' could not be found!"),
-    INVALID_DURATION(Prefix.ERROR, "Invalid time duration format: " + ChatColor.WHITE);
+    INVALID_DURATION(Prefix.ERROR, "Invalid time duration format: " + ChatColor.WHITE),
+    INVALID_PAGE(Prefix.ERROR, "Page does not exist!");
 
     private Prefix prefix;
     private String message;
