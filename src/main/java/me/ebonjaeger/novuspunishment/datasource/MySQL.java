@@ -2,19 +2,28 @@ package me.ebonjaeger.novuspunishment.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.HikariPool;
-import me.ebonjaeger.novuspunishment.ConsoleLogger;
-import me.ebonjaeger.novuspunishment.NovusPunishment;
-import me.ebonjaeger.novuspunishment.PlayerState;
-import me.ebonjaeger.novuspunishment.action.*;
-import me.ebonjaeger.novuspunishment.configuration.DatabaseSettings;
-import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
-
-import javax.inject.Inject;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.inject.Inject;
+import me.ebonjaeger.novuspunishment.ConsoleLogger;
+import me.ebonjaeger.novuspunishment.NovusPunishment;
+import me.ebonjaeger.novuspunishment.PlayerState;
+import me.ebonjaeger.novuspunishment.action.Action;
+import me.ebonjaeger.novuspunishment.action.Kick;
+import me.ebonjaeger.novuspunishment.action.Mute;
+import me.ebonjaeger.novuspunishment.action.PermanentBan;
+import me.ebonjaeger.novuspunishment.action.TemporaryBan;
+import me.ebonjaeger.novuspunishment.action.Warning;
+import me.ebonjaeger.novuspunishment.configuration.DatabaseSettings;
+import me.ebonjaeger.novuspunishment.configuration.SettingsManager;
 
 /**
  * MySQL data source class.
@@ -150,12 +159,7 @@ public class MySQL {
      * @param mute The {@link Mute} being stored
      */
     public void saveMute(Mute mute) {
-        // Timestamps from `Instant.MAX` cause a data truncation error.
-        // In these cases, set it to `null` instead, which is allowed.
-        Timestamp expires = null;
-        if (!mute.getExpires().equals(Instant.MAX)) {
-            expires = Timestamp.from(mute.getExpires());
-        }
+        Timestamp expires = Timestamp.from(mute.getExpires());
 
         try (
             Connection conn = getConnection();

@@ -1,15 +1,15 @@
 package me.ebonjaeger.novuspunishment;
 
-import org.bukkit.ChatColor;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import org.bukkit.ChatColor;
 
 public class Utils {
 
@@ -17,6 +17,13 @@ public class Utils {
     private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
         .withLocale(Locale.getDefault())
         .withZone(ZoneId.systemDefault());
+
+    // new Date(Long.MAX_VALUE) in UTC time zone
+    public static final Date END_OF_TIME;
+
+    static {
+        END_OF_TIME = new Date(Long.MAX_VALUE);
+    }
 
     public static String formatKickMessage(String reason) {
         return String.format(ChatColor.GRAY + "You have been kicked from the server!\n" +

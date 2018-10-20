@@ -67,7 +67,7 @@ public class MuteCommand extends BaseCommand {
         }
 
         Instant timestamp = Instant.now();
-        Instant expires = Instant.MAX;
+        Instant expires;
 
         // Parse and add duration if it exists
         if (duration != null) {
@@ -77,6 +77,9 @@ public class MuteCommand extends BaseCommand {
                 messenger.sendMessage(sender, Message.INVALID_DURATION, duration);
                 return;
             }
+        } else {
+            // No duration given, so the mute is forever (or as near as we can make it)
+            expires = Instant.ofEpochMilli(Utils.END_OF_TIME.getTime());
         }
 
         Mute mute = new Mute(target.getUniqueId(), staff, timestamp, expires, _reason);
@@ -92,7 +95,7 @@ public class MuteCommand extends BaseCommand {
 
     private void notifyPlayers(Player target, Mute mute) {
         String duration;
-        if (mute.getExpires().equals(Instant.MAX)) {
+        if (mute.getExpires().toEpochMilli() == Utils.END_OF_TIME.getTime()) {
             duration = "forever";
         } else {
             duration = Utils.formatTime(mute.getExpires());
