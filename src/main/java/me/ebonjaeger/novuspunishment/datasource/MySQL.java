@@ -279,6 +279,38 @@ public class MySQL {
      */
 
     /**
+     * Get the total number of past incidents for a player.
+     * <p>
+     * If there was an error getting the number, <code>-1</code> will be returned.
+     *
+     * @param playerUUID The player to look up
+     * @return The number of incidents
+     */
+    public int getTotalIncidents(UUID playerUUID) {
+        int incidents = 0;
+
+        try (
+            Connection conn = getConnection();
+            PreparedStatement statement = conn.prepareStatement(MySqlStatements.getTotalIncidents(prefix))
+        ) {
+            statement.setString(1, playerUUID.toString());
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                incidents = result.getInt("_count");
+            }
+
+            result.close();
+        } catch (SQLException ex) {
+            ConsoleLogger.severe("Unable to get total incident count for '" + playerUUID.toString() + "':", ex);
+            incidents = -1;
+        }
+
+        return incidents;
+    }
+
+    /**
      * Get a page view of a player's past incidents.
      * <p>
      * What is returned will be limited to only the results in the requested page.
