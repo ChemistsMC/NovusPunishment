@@ -75,12 +75,4 @@ class MySqlStatements {
             "FROM " + prefix + "player_state " +
             "WHERE " + Columns.UUID + " =?;";
     }
-
-    static String getLatestTempbanStmt(String prefix) {
-        return "SELECT " + Columns.STAFF_UUID + ", " + Columns.TIMESTAMP + ", " + Columns.REASON + ", " + Columns.EXPIRES + " " +
-            "FROM " + prefix + "player_actions " +
-            "WHERE " + Columns.UUID + "=? AND " + Columns.TYPE + "='tempban' AND " + Columns.EXPIRES + ">=? " +
-            "ORDER BY " + Columns.ID + " DESC " +
-            "LIMIT 1;";
-    }
 }

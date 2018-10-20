@@ -378,35 +378,4 @@ public class MySQL {
 
         return null;
     }
-
-    /**
-     * Get an active {@link TemporaryBan} for a player, if one exists.
-     * Returns {@code null} if the player has no active tempban.
-     *
-     * @param uniqueID The player's unique ID
-     * @return The player's active tempban, or null
-     */
-    public TemporaryBan getActiveTempban(UUID uniqueID) {
-        try (
-            Connection conn = getConnection();
-            PreparedStatement statement = conn.prepareStatement(MySqlStatements.getLatestTempbanStmt(prefix))
-        ) {
-            statement.setString(1, uniqueID.toString());
-            statement.setTimestamp(2, Timestamp.from(Instant.now()));
-
-            ResultSet result = statement.executeQuery();
-            if (result != null && result.next()) {
-                String staff = result.getString(Columns.STAFF_UUID);
-                Instant timeStamp = result.getTimestamp(Columns.TIMESTAMP).toInstant();
-                Instant expires = result.getTimestamp(Columns.EXPIRES).toInstant();
-                String reason = result.getString(Columns.REASON);
-
-                return new TemporaryBan(uniqueID, staff, timeStamp, expires, reason);
-            }
-        } catch (SQLException ex) {
-            ConsoleLogger.severe(String.format("Unable to get latest tempban for '%s':", uniqueID.toString()), ex);
-        }
-
-        return null;
-    }
 }
