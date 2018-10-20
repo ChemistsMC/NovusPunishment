@@ -36,4 +36,11 @@ public interface Action {
      * @return The reason for the action
      */
     String getReason();
+
+    /**
+     * Get the type of action that the class represents.
+     *
+     * @return The type of action
+     */
+    ActionType getType();
 }

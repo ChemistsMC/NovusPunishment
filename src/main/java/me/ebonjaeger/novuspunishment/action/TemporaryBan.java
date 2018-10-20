@@ -58,4 +58,9 @@ public class TemporaryBan implements TemporaryAction {
     public String getReason() {
         return reason;
     }
+
+    @Override
+    public ActionType getType() {
+        return ActionType.TEMPORARY_BAN;
+    }
 }
