@@ -52,7 +52,7 @@ public class GetReportCommand extends BaseCommand {
                 return;
             }
 
-            int totalPages = (totalIncidents + PAGE_SIZE - 1) * PAGE_SIZE;
+            int totalPages = (totalIncidents + PAGE_SIZE - 1) / PAGE_SIZE;
 
             // Check page bounds
             if (page < 1 || page > totalPages) {
@@ -86,7 +86,7 @@ public class GetReportCommand extends BaseCommand {
     }
 
     private void sendReport(CommandSender sender, Report report) {
-        int totalPages = (report.getTotalIncidents() + PAGE_SIZE - 1) * PAGE_SIZE;
+        int totalPages = (report.getTotalIncidents() + PAGE_SIZE - 1) / PAGE_SIZE;
 
         // Send header and counts
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + " ---------------------------------------------------- ");
