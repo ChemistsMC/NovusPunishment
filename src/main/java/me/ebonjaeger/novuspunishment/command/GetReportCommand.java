@@ -52,9 +52,7 @@ public class GetReportCommand extends BaseCommand {
 
             // Make sure there was no error getting the count
             if (totalIncidents == -1) {
-                bukkitService.runTask(() -> {
-                    messenger.sendMessage(sender, Message.ERROR_GETTING_COUNT);
-                });
+                bukkitService.runTask(() -> messenger.sendMessage(sender, Message.ERROR_GETTING_COUNT));
 
                 return;
             }
@@ -63,9 +61,7 @@ public class GetReportCommand extends BaseCommand {
 
             // Check page bounds
             if (finalPage < 1 || finalPage > totalPages) {
-                bukkitService.runTask(() -> {
-                    messenger.sendMessage(sender, Message.INVALID_PAGE);
-                });
+                bukkitService.runTask(() -> messenger.sendMessage(sender, Message.INVALID_PAGE));
 
                 return;
             }
