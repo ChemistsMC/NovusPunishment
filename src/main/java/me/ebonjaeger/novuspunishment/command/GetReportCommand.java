@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import me.ebonjaeger.novuspunishment.BukkitService;
 import me.ebonjaeger.novuspunishment.Message;
 import me.ebonjaeger.novuspunishment.Messenger;
+import me.ebonjaeger.novuspunishment.PlayerState;
 import me.ebonjaeger.novuspunishment.StateManager;
 import me.ebonjaeger.novuspunishment.Utils;
 import me.ebonjaeger.novuspunishment.action.Action;
@@ -70,21 +71,39 @@ public class GetReportCommand extends BaseCommand {
 
             List<Action> incidents = dataSource.getActionsAgainstUser(target.getUniqueId(), finalPage, PAGE_SIZE);
 
-            bukkitService.runTask(() -> sendReport(sender, target.getName(), finalPage, totalIncidents, incidents));
+            // Get player state for muted status
+            PlayerState state = stateManager.getPlayerState(target.getUniqueId());
+            if (state == null) {
+                state = dataSource.getPlayerState(target.getUniqueId());
+            }
+
+            boolean muted;
+            if (state != null) {
+                muted = state.isMuted();
+            } else {
+                muted = false;
+            }
+
+            bukkitService.runTask(() -> {
+                Report report = new Report(target.getName(), finalPage, totalIncidents, incidents, muted);
+
+                sendReport(sender, report);
+            });
         });
     }
 
-    private void sendReport(CommandSender sender, String name, int page, int totalIncidents, List<Action> incidents) {
-        int totalPages = (totalIncidents + PAGE_SIZE - 1) * PAGE_SIZE;
+    private void sendReport(CommandSender sender, Report report) {
+        int totalPages = (report.getTotalIncidents() + PAGE_SIZE - 1) * PAGE_SIZE;
 
         // Send header and counts
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + " ---------------------------------------------------- ");
-        sender.sendMessage(ChatColor.BLUE + "Player: " + ChatColor.WHITE + name);
-        sender.sendMessage(ChatColor.BLUE + "Total incidents: " + ChatColor.WHITE + totalIncidents);
-        sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + " ---------------" + ChatColor.BLUE + " Page " + page + "/" + totalPages + ChatColor.GRAY + ChatColor.STRIKETHROUGH + " --------------- ");
+        sender.sendMessage(ChatColor.BLUE + "Player: " + ChatColor.WHITE + report.getName());
+        sender.sendMessage(ChatColor.BLUE + "Total incidents: " + ChatColor.WHITE + report.getTotalIncidents());
+        sender.sendMessage(ChatColor.BLUE + "Currently muted: " + ChatColor.WHITE + report.isMuted());
+        sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + " ---------------" + ChatColor.BLUE + " Page " + report.getPage() + "/" + totalPages + ChatColor.GRAY + ChatColor.STRIKETHROUGH + " --------------- ");
 
         // Send incident information
-        for (Action incident : incidents) {
+        for (Action incident : report.getIncidents()) {
             String timeStamp = Utils.formatTime(incident.getTimestamp());
 
             String staffName;
@@ -101,5 +120,45 @@ public class GetReportCommand extends BaseCommand {
         }
 
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + " ---------------------------------------------------- ");
+    }
+
+    /**
+     * Class to wrap report data in
+     */
+    private class Report {
+
+        private String name;
+        private int page;
+        private int totalIncidents;
+        private List<Action> incidents;
+        private boolean muted;
+
+        Report(String name, int page, int totalIncidents, List<Action> incidents, boolean muted) {
+            this.name = name;
+            this.page = page;
+            this.totalIncidents = totalIncidents;
+            this.incidents = incidents;
+            this.muted = muted;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getPage() {
+            return page;
+        }
+
+        public int getTotalIncidents() {
+            return totalIncidents;
+        }
+
+        public List<Action> getIncidents() {
+            return incidents;
+        }
+
+        public boolean isMuted() {
+            return muted;
+        }
     }
 }
