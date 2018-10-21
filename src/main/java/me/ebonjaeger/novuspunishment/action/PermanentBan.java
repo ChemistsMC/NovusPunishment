@@ -50,4 +50,9 @@ public class PermanentBan implements Action {
     public String getReason() {
         return reason;
     }
+
+    @Override
+    public ActionType getType() {
+        return ActionType.PERMANENT_BAN;
+    }
 }

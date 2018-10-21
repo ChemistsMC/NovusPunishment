@@ -27,7 +27,7 @@ public class StateManager {
      * @param uniqueID    The player's unique ID
      * @param playerState The player's current state
      */
-    public void addPlayerState(UUID uniqueID, PlayerState playerState) {
+    public synchronized void addPlayerState(UUID uniqueID, PlayerState playerState) {
         playerStates.put(uniqueID, playerState);
     }
 
@@ -39,7 +39,7 @@ public class StateManager {
      * @param uniqueID The player's unique ID
      * @return The player's state, or null
      */
-    public PlayerState getPlayerState(UUID uniqueID) {
+    public synchronized PlayerState getPlayerState(UUID uniqueID) {
         return playerStates.get(uniqueID);
     }
 
@@ -51,7 +51,7 @@ public class StateManager {
      * @param player The {@link Player} to get the state for
      * @return The current state data for the player
      */
-    public PlayerState getOrCreateState(Player player) {
+    public synchronized PlayerState getOrCreateState(Player player) {
         return playerStates.getOrDefault(
             player.getUniqueId(),
             new PlayerState(player.getUniqueId(), player.getName(), false)
@@ -64,7 +64,7 @@ public class StateManager {
      *
      * @param uniqueID The unique ID of the player
      */
-    public void removePlayerState(UUID uniqueID) {
+    public synchronized void removePlayerState(UUID uniqueID) {
         playerStates.remove(uniqueID);
     }
 

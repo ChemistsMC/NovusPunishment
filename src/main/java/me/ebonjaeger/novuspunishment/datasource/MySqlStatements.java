@@ -70,6 +70,12 @@ class MySqlStatements {
             "LIMIT " + pageSize + " OFFSET " + offset + ";";
     }
 
+    static String getTotalIncidents(String prefix) {
+        return "SELECT COUNT(*) AS _count " +
+            "FROM " + prefix + "player_actions " +
+            "WHERE " + Columns.UUID + "=?;";
+    }
+
     static String getPlayerStmt(String prefix) {
         return "SELECT " + Columns.PLAYERNAME + ", " + Columns.MUTED + ", " + Columns.EXPIRES + " " +
             "FROM " + prefix + "player_state " +
