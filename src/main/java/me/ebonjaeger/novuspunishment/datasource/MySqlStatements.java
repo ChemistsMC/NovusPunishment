@@ -71,7 +71,7 @@ class MySqlStatements {
     }
 
     static String getTotalIncidents(String prefix) {
-        return "SELECT COUNT(*) AS _count" +
+        return "SELECT COUNT(*) AS _count " +
             "FROM " + prefix + "player_actions " +
             "WHERE " + Columns.UUID + "=?;";
     }
