@@ -113,9 +113,14 @@ public class GetReportCommand extends BaseCommand {
                 staffName = Bukkit.getOfflinePlayer(UUID.fromString(incident.getStaff())).getName();
             }
 
+            String reason = "";
+            if (incident.getReason() != null) {
+                reason = incident.getReason();
+            }
+
             sender.sendMessage(String.format(ChatColor.GRAY + " - " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "on " + ChatColor.WHITE + "%s " +
                     ChatColor.GRAY + "by " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "for: " + ChatColor.WHITE + "%s",
-                incident.getType().getName(), timeStamp, staffName, incident.getReason()
+                incident.getType().getName(), timeStamp, staffName, reason
             ));
         }
 
