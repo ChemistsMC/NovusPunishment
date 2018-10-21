@@ -4,7 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.Default;
 import java.util.List;
 import java.util.UUID;
 import javax.inject.Inject;
@@ -41,12 +41,7 @@ public class GetReportCommand extends BaseCommand {
     @CommandAlias("getreport|gr")
     @CommandPermission("newpunish.command.getreport")
     @CommandCompletion("@players")
-    public void onCommand(CommandSender sender, OfflinePlayer target, @Optional Integer page) {
-        if (page == null) {
-            page = 1;
-        }
-
-        int finalPage = page;
+    public void onCommand(CommandSender sender, OfflinePlayer target, @Default("1") Integer page) {
         bukkitService.runTaskAsync(() -> {
             int totalIncidents = dataSource.getTotalIncidents(target.getUniqueId());
 
@@ -60,13 +55,13 @@ public class GetReportCommand extends BaseCommand {
             int totalPages = (totalIncidents + PAGE_SIZE - 1) * PAGE_SIZE;
 
             // Check page bounds
-            if (finalPage < 1 || finalPage > totalPages) {
+            if (page < 1 || page > totalPages) {
                 bukkitService.runTask(() -> messenger.sendMessage(sender, Message.INVALID_PAGE));
 
                 return;
             }
 
-            List<Action> incidents = dataSource.getActionsAgainstUser(target.getUniqueId(), finalPage, PAGE_SIZE);
+            List<Action> incidents = dataSource.getActionsAgainstUser(target.getUniqueId(), page, PAGE_SIZE);
 
             // Get player state for muted status
             PlayerState state = stateManager.getPlayerState(target.getUniqueId());
@@ -83,7 +78,7 @@ public class GetReportCommand extends BaseCommand {
 
             bukkitService.runTask(() -> {
                 boolean banned = Bukkit.getBanList(BanList.Type.NAME).isBanned(target.getName());
-                Report report = new Report(target.getName(), finalPage, totalIncidents, incidents, banned, muted);
+                Report report = new Report(target.getName(), page, totalIncidents, incidents, banned, muted);
 
                 sendReport(sender, report);
             });
