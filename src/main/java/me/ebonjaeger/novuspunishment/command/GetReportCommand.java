@@ -16,6 +16,7 @@ import me.ebonjaeger.novuspunishment.StateManager;
 import me.ebonjaeger.novuspunishment.Utils;
 import me.ebonjaeger.novuspunishment.action.Action;
 import me.ebonjaeger.novuspunishment.datasource.MySQL;
+import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -85,7 +86,8 @@ public class GetReportCommand extends BaseCommand {
             }
 
             bukkitService.runTask(() -> {
-                Report report = new Report(target.getName(), finalPage, totalIncidents, incidents, muted);
+                boolean banned = Bukkit.getBanList(BanList.Type.NAME).isBanned(target.getName());
+                Report report = new Report(target.getName(), finalPage, totalIncidents, incidents, banned, muted);
 
                 sendReport(sender, report);
             });
@@ -100,6 +102,7 @@ public class GetReportCommand extends BaseCommand {
         sender.sendMessage(ChatColor.BLUE + "Player: " + ChatColor.WHITE + report.getName());
         sender.sendMessage(ChatColor.BLUE + "Total incidents: " + ChatColor.WHITE + report.getTotalIncidents());
         sender.sendMessage(ChatColor.BLUE + "Currently muted: " + ChatColor.WHITE + report.isMuted());
+        sender.sendMessage(ChatColor.BLUE + "Currently banned: " + ChatColor.WHITE + report.isBanned());
         sender.sendMessage(ChatColor.GRAY + "" + ChatColor.STRIKETHROUGH + " ---------------" + ChatColor.BLUE + " Page " + report.getPage() + "/" + totalPages + ChatColor.GRAY + ChatColor.STRIKETHROUGH + " --------------- ");
 
         // Send incident information
@@ -136,13 +139,15 @@ public class GetReportCommand extends BaseCommand {
         private int page;
         private int totalIncidents;
         private List<Action> incidents;
+        private boolean banned;
         private boolean muted;
 
-        Report(String name, int page, int totalIncidents, List<Action> incidents, boolean muted) {
+        Report(String name, int page, int totalIncidents, List<Action> incidents, boolean banned, boolean muted) {
             this.name = name;
             this.page = page;
             this.totalIncidents = totalIncidents;
             this.incidents = incidents;
+            this.banned = banned;
             this.muted = muted;
         }
 
@@ -160,6 +165,10 @@ public class GetReportCommand extends BaseCommand {
 
         public List<Action> getIncidents() {
             return incidents;
+        }
+
+        public boolean isBanned() {
+            return banned;
         }
 
         public boolean isMuted() {
